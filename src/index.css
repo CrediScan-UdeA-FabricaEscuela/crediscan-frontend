@@ -1,0 +1,3 @@
+/* minimal reset - app styles are in App.css */
+body { margin: 0; }
+#root { min-height: 100vh; }
