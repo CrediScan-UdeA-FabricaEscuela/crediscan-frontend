@@ -43,39 +43,88 @@ export default function RegisterApplicant() {
 
   return (
     <div>
-      <h2>Registrar Solicitante</h2>
+      <button className="back-link" onClick={() => navigate('/solicitantes')}>
+        ← Volver a Solicitantes
+      </button>
+
+      <div className="page-header">
+        <div className="page-title-group">
+          <h2>Registrar Solicitante</h2>
+          <p>Complete todos los campos obligatorios</p>
+        </div>
+      </div>
+
       {error && <div className="alert error">{error}</div>}
 
       <form onSubmit={onSubmit} className="form-card">
-        <label>Nombre *</label>
-        <input name="nombre" value={form.nombre} onChange={onChange} required />
+        <div className="form-grid">
+          <div className="form-group">
+            <label>Nombre completo *</label>
+            <input name="nombre" value={form.nombre} onChange={onChange} required placeholder="Ej: Juan García" />
+          </div>
 
-        <label>Identificacion *</label>
-        <input name="identificacion" value={form.identificacion} onChange={onChange} required />
+          <div className="form-group">
+            <label>Identificación *</label>
+            <input name="identificacion" value={form.identificacion} onChange={onChange} required placeholder="Ej: 1234567890" />
+          </div>
 
-        <label>Fecha de Nacimiento *</label>
-        <input type="date" name="fecha_nacimiento" value={form.fecha_nacimiento} onChange={onChange} required />
+          <div className="form-group">
+            <label>Fecha de Nacimiento *</label>
+            <input type="date" name="fecha_nacimiento" value={form.fecha_nacimiento} onChange={onChange} required />
+          </div>
 
-        <label>Tipo de Empleo *</label>
-        <select name="tipo_empleo" value={form.tipo_empleo} onChange={onChange}>
-          {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
+          <div className="form-group">
+            <label>Tipo de Empleo *</label>
+            <select name="tipo_empleo" value={form.tipo_empleo} onChange={onChange}>
+              {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
 
-        <label>Ingresos Mensuales *</label>
-        <input type="number" name="ingresos_mensuales" value={form.ingresos_mensuales} onChange={onChange} min="0" step="0.01" required />
+          <div className="form-group">
+            <label>Ingresos Mensuales (COP) *</label>
+            <input
+              type="number"
+              name="ingresos_mensuales"
+              value={form.ingresos_mensuales}
+              onChange={onChange}
+              min="0"
+              step="0.01"
+              required
+              placeholder="0"
+            />
+          </div>
 
-        <label>Antiguedad Laboral (meses) *</label>
-        <input type="number" name="antiguedad_laboral" value={form.antiguedad_laboral} onChange={onChange} min="0" required />
+          <div className="form-group">
+            <label>Antigüedad Laboral (meses) *</label>
+            <input
+              type="number"
+              name="antiguedad_laboral"
+              value={form.antiguedad_laboral}
+              onChange={onChange}
+              min="0"
+              required
+              placeholder="0"
+            />
+          </div>
 
-        <label>Direccion</label>
-        <input name="direccion" value={form.direccion} onChange={onChange} />
+          <div className="form-group form-full">
+            <label>Dirección</label>
+            <input name="direccion" value={form.direccion} onChange={onChange} placeholder="Calle, ciudad" />
+          </div>
 
-        <label>Correo Electronico</label>
-        <input type="email" name="correo_electronico" value={form.correo_electronico} onChange={onChange} />
+          <div className="form-group form-full">
+            <label>Correo Electrónico</label>
+            <input type="email" name="correo_electronico" value={form.correo_electronico} onChange={onChange} placeholder="ejemplo@correo.com" />
+          </div>
+        </div>
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate('/solicitantes')}>Cancelar</button>
-          <button type="submit" disabled={loading}>{loading ? 'Guardando...' : 'Registrar'}</button>
+          <button type="button" className="btn-secondary" onClick={() => navigate('/solicitantes')}>
+            Cancelar
+          </button>
+          <button type="submit" disabled={loading}>
+            {loading ? <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Guardando...</> : 'Registrar Solicitante'}
+          </button>
         </div>
       </form>
     </div>

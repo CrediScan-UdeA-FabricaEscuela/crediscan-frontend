@@ -18,7 +18,7 @@ export default function Login() {
     try {
       const data = await login(username, password);
       handleLogin(data.token, data.role, username);
-      navigate('/solicitantes');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -28,22 +28,52 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <form onSubmit={onSubmit} className="login-form">
-        <h1>CrediScan</h1>
-        <p className="subtitle">Credit Scoring Engine</p>
+      <div className="login-card">
+        <div className="login-logo">
+          <div className="login-logo-icon">CS</div>
+          <h1>CrediScan</h1>
+        </div>
+        <p className="subtitle">Motor de Scoring Crediticio</p>
+
+        <div className="login-demo">
+          <strong>Credenciales de demo</strong>
+          Admin: <code>admin</code> / <code>admin123</code><br />
+          Analista: <code>analista1</code> / <code>pass1234</code><br />
+          Risk Mgr: <code>riskmanager1</code> / <code>pass1234</code>
+        </div>
 
         {error && <div className="alert error">{error}</div>}
 
-        <label>Usuario</label>
-        <input value={username} onChange={e => setUsername(e.target.value)} required />
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label>Usuario</label>
+            <input
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              placeholder="nombre de usuario"
+              required
+              autoFocus
+            />
+          </div>
 
-        <label>Contrasena</label>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+          <div className="form-group">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="contraseña"
+              required
+            />
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Ingresando...' : 'Ingresar'}
-        </button>
-      </form>
+          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '.75rem' }}>
+            {loading ? (
+              <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Ingresando...</>
+            ) : 'Ingresar'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
