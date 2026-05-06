@@ -1,6 +1,6 @@
 const BASE_URL = window.location.hostname === 'localhost' && window.location.port === '5173'
   ? 'http://localhost:8080'
-  : '';
+  : (import.meta.env.VITE_API_URL || '');
 
 async function request(path, options = {}) {
   const token = localStorage.getItem('token');
