@@ -7,6 +7,7 @@ import {
   getKnockoutRules,
   createKnockoutRule,
   deleteKnockoutRule,
+  compareScoringModels,
 } from '../api/client';
 
 const KO_OPERATORS = ['GT', 'LT', 'GTE', 'LTE', 'EQ', 'NEQ'];
@@ -278,8 +279,26 @@ export default function ScoringModels() {
   const [saveSuccess, setSaveSuccess] = useState('');
   const [activating, setActivating] = useState(null);
   const [deleting, setDeleting] = useState(null);
+  const [showCompare, setShowCompare] = useState(false);
+  const [compareBase, setCompareBase] = useState('');
+  const [compareTarget, setCompareTarget] = useState('');
+  const [compareResult, setCompareResult] = useState(null);
+  const [comparing, setComparing] = useState(false);
+  const [compareError, setCompareError] = useState('');
 
   useEffect(() => { loadModels(); }, []);
+
+  async function onCompare() {
+    setCompareError(''); setCompareResult(null);
+    if (!compareBase || !compareTarget) { setCompareError('Seleccioná los dos modelos.'); return; }
+    if (compareBase === compareTarget) { setCompareError('Seleccioná modelos distintos.'); return; }
+    setComparing(true);
+    try {
+      const r = await compareScoringModels(compareBase, compareTarget);
+      setCompareResult(r);
+    } catch (e) { setCompareError(e.message); }
+    finally { setComparing(false); }
+  }
 
   async function loadModels() {
     setLoading(true);
@@ -348,10 +367,54 @@ export default function ScoringModels() {
           <h2>Modelos de Scoring</h2>
           <p>{models.length} modelos configurados</p>
         </div>
-        <button onClick={() => { setShowForm(!showForm); setSaveError(''); }}>
-          {showForm ? '✕ Cancelar' : '+ Crear Modelo'}
-        </button>
+        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+          <button className="btn-secondary" onClick={() => { setShowCompare(!showCompare); setCompareError(''); setCompareResult(null); }}>
+            {showCompare ? '✕ Cerrar comparación' : '⇄ Comparar modelos'}
+          </button>
+          <button onClick={() => { setShowForm(!showForm); setSaveError(''); }}>
+            {showForm ? '✕ Cancelar' : '+ Crear Modelo'}
+          </button>
+        </div>
       </div>
+
+      {showCompare && (
+        <div className="card" style={{ marginBottom: '1.25rem' }}>
+          <div className="card-header"><h3>Comparar modelos (HU-08)</h3></div>
+          <div className="card-body">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '.5rem', alignItems: 'end' }}>
+              <label>
+                <span>Modelo base</span>
+                <select value={compareBase} onChange={e => setCompareBase(e.target.value)}>
+                  <option value="">— Seleccionar —</option>
+                  {models.map(m => <option key={m.id} value={m.id}>{m.nombre} v{m.version}</option>)}
+                </select>
+              </label>
+              <label>
+                <span>Modelo a comparar</span>
+                <select value={compareTarget} onChange={e => setCompareTarget(e.target.value)}>
+                  <option value="">— Seleccionar —</option>
+                  {models.map(m => <option key={m.id} value={m.id}>{m.nombre} v{m.version}</option>)}
+                </select>
+              </label>
+              <button onClick={onCompare} disabled={comparing}>{comparing ? 'Comparando...' : 'Comparar'}</button>
+            </div>
+            {compareError && <div className="alert error" style={{ marginTop: '.75rem' }}>{compareError}</div>}
+            {compareResult && (
+              <div style={{ marginTop: '1rem' }}>
+                <pre style={{
+                  background: '#0b1220',
+                  color: '#d1d5db',
+                  padding: '1rem',
+                  borderRadius: '6px',
+                  fontSize: '.78rem',
+                  maxHeight: '400px',
+                  overflow: 'auto'
+                }}>{JSON.stringify(compareResult, null, 2)}</pre>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {saveSuccess && <div className="alert success">{saveSuccess}</div>}
       {saveError && <div className="alert error">{saveError}</div>}
