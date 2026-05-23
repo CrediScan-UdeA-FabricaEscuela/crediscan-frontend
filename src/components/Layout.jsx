@@ -57,6 +57,14 @@ export default function Layout() {
             </>
           )}
 
+          {(isAdmin || isRiskManager || isAnalyst) && (
+            <>
+              <div className="sidebar-section-label">Análisis</div>
+              <NavItem to="/simulacion" icon="🧪" label="Simulación" />
+              {(isAdmin || isRiskManager) && <NavItem to="/reportes" icon="📊" label="Reportes" />}
+            </>
+          )}
+
           {(isAdmin || isRiskManager) && (
             <>
               <div className="sidebar-section-label">Configuración</div>

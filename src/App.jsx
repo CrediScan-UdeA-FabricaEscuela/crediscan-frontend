@@ -15,6 +15,8 @@ import ScoringVariables from './pages/ScoringVariables';
 import ScoringModels from './pages/ScoringModels';
 import AuditLog from './pages/AuditLog';
 import Users from './pages/Users';
+import Reports from './pages/Reports';
+import Simulation from './pages/Simulation';
 import './App.css';
 
 export default function App() {
@@ -68,6 +70,22 @@ export default function App() {
               element={
                 <ProtectedRoute roles={['ADMIN', 'RISK_MANAGER']}>
                   <AuditLog />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reportes"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'RISK_MANAGER', 'CREDIT_SUPERVISOR']}>
+                  <Reports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/simulacion"
+              element={
+                <ProtectedRoute roles={['ADMIN', 'RISK_MANAGER', 'ANALYST']}>
+                  <Simulation />
                 </ProtectedRoute>
               }
             />
