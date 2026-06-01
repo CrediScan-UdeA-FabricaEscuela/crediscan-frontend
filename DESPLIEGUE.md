@@ -6,16 +6,15 @@ Stack: **React + Vite**, desplegado en **Vercel**. Consume la API REST del backe
 
 ---
 
-## 1. Topología de despliegue
+## 1. Topología de despliegue (oficial)
 
 | Componente | URL | Dónde vive | Estado |
 |---|---|---|---|
-| **Frontend (demo)** | https://crediscan-frontend-gabo.vercel.app | Vercel · proyecto `crediscan-frontend-gabo` | ✅ Operativo |
-| **Backend (demo)** | https://crediscan-api-gabo.onrender.com | Render · deploy del mirror `gjcardonam/crediscan-backend` | ✅ Operativo |
+| **Frontend** | https://crediscan-frontend-gabo.vercel.app | Vercel · proyecto `crediscan-frontend-gabo` | ✅ Operativo |
+| **Backend** | https://crediscan-api-gabo.onrender.com | Render · deploy de `gjcardonam/crediscan-backend` | ✅ Operativo |
 | **Base de datos** | `crediscan-db-gabo` | Render Postgres (free) | ✅ Activa — ⚠️ **expira 2026-06-22** |
-| **Backend del equipo** | https://crediscan-backend.onrender.com | Render (otra cuenta) | ✅ Vivo · ver nota CORS |
 
-> El **stack demo** (frontend-gabo → api-gabo → db-gabo) es el que está 100% operativo y verificado end-to-end. Es el que se usa para la sustentación.
+> Este es el stack oficial del proyecto: está 100% operativo y verificado end-to-end (login, navegación, evaluaciones, reportes). El backend ya tiene el CORS configurado para el frontend, así que no requiere nada externo.
 
 ---
 
@@ -24,15 +23,13 @@ Stack: **React + Vite**, desplegado en **Vercel**. Consume la API REST del backe
 El frontend resuelve la URL del backend desde **`VITE_API_URL`** (Vite hornea el valor en *build time*).
 
 - **Local:** se lee de `.env.local`.
-- **Producción (Vercel):** se lee de la **Environment Variable del proyecto en Vercel**, que **tiene prioridad sobre** el archivo `.env.production` del repo.
+- **Producción (Vercel):** se lee de la **Environment Variable del proyecto en Vercel**, que tiene prioridad sobre el archivo `.env.production` del repo.
 
 | Entorno | `VITE_API_URL` |
 |---|---|
 | Local (`.env.local`) | `http://localhost:8080` (o la IP de tu backend local) |
-| Vercel `crediscan-frontend-gabo` | `https://crediscan-api-gabo.onrender.com` |
-| `.env.production` (default del repo) | `https://crediscan-backend.onrender.com` |
-
-> Como la env var de Vercel manda, el despliegue demo apunta a `api-gabo` aunque el archivo `.env.production` diga otra cosa.
+| Producción (Vercel `crediscan-frontend-gabo`) | `https://crediscan-api-gabo.onrender.com` |
+| `.env.production` (default del repo) | `https://crediscan-api-gabo.onrender.com` |
 
 ---
 
@@ -58,12 +55,17 @@ El proyecto `crediscan-frontend-gabo` está conectado al repo `gjcardonam/credis
 
 ---
 
-## 5. Dependencia del backend (CORS)
+## 5. CORS
 
-El navegador exige que el backend autorice el **origin** del frontend. El backend lee la lista desde la env var **`CORS_ALLOWED_ORIGINS`**.
+El navegador exige que el backend autorice el **origin** del frontend. El backend lo lee de la env var **`CORS_ALLOWED_ORIGINS`** (en Render).
 
-- `api-gabo` ya incluye `https://crediscan-frontend-gabo.vercel.app` → preflight `OPTIONS` responde **200**. ✅
-- Si se quiere apuntar el front al **backend del equipo** (`crediscan-backend.onrender.com`), ese servicio **debe agregar** el origin del front a su `CORS_ALLOWED_ORIGINS` (hoy responde **403** al preflight).
+Valor actual en `crediscan-api-gabo` (ya configurado):
+
+```
+CORS_ALLOWED_ORIGINS=https://crediscan-frontend-gabo.vercel.app,http://localhost:5173
+```
+
+Si se agrega un nuevo dominio de frontend, hay que añadir su origin a esa variable y redeployar el backend.
 
 ---
 
@@ -89,4 +91,3 @@ La BD `crediscan-db-gabo` está sembrada con datos listos para mostrar:
 
 - ⚠️ **Cold start:** el plan free de Render duerme el backend por inactividad. La **primera petición** tras el sueño tarda **1–2 min**. Para una demo en vivo, abrir el backend (`/actuator/health`) 1–2 minutos antes.
 - ⚠️ **Expiración de BD:** `crediscan-db-gabo` (Postgres free) **expira el 2026-06-22**. Después hay que renovar/recrear la BD y re-sembrar.
-- El deploy `crediscan-api.onrender.com` (deploy personal del repo oficial) está caído: su BD expiró el 2026-05-07. No se usa; el backend canónico vivo es el del equipo.
