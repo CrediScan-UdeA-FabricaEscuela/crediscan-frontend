@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerApplicant } from '../api/client';
+import Button from '../components/ui/Button';
 
 const EMPLOYMENT_TYPES = ['EMPLEADO', 'INDEPENDIENTE', 'PENSIONADO', 'DESEMPLEADO'];
 
@@ -43,7 +44,7 @@ export default function RegisterApplicant() {
 
   return (
     <div>
-      <button className="back-link" onClick={() => navigate('/solicitantes')}>
+      <button className="back-link" type="button" onClick={() => navigate('/solicitantes')}>
         ← Volver a Solicitantes
       </button>
 
@@ -119,12 +120,12 @@ export default function RegisterApplicant() {
         </div>
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate('/solicitantes')}>
+          <Button variant="secondary" onClick={() => navigate('/solicitantes')}>
             Cancelar
-          </button>
-          <button type="submit" disabled={loading}>
-            {loading ? <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Guardando...</> : 'Registrar Solicitante'}
-          </button>
+          </Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? <><span className="spinner register-spinner"></span> Guardando...</> : 'Registrar Solicitante'}
+          </Button>
         </div>
       </form>
     </div>

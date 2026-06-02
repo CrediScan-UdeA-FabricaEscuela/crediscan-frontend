@@ -948,3 +948,5 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .users-role-item { margin-bottom: .85rem; padding-bottom: .85rem; border-bottom: 1px solid var(--border-subtle); }
 .users-role-desc { font-size: .8rem; color: var(--fg-secondary); }
 .users-role-hint { font-size: .78rem; color: var(--fg-secondary); margin-top: .2rem; }
+/* ── RegisterApplicant page — additive namespaced classes ── */
+.register-spinner { border-top-color: #fff; }
