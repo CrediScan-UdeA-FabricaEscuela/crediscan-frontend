@@ -9,6 +9,8 @@ import {
   getAnalystActivityCsvUrl,
 } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/ui/Button';
+import StatCard from '../components/ui/StatCard';
 
 const EMPLEO_OPTIONS = [
   { value: '', label: 'Todos' },
@@ -20,15 +22,6 @@ const EMPLEO_OPTIONS = [
 
 // Las claves son los enums reales del backend (RiskLevel). Las etiquetas en español
 // son solo para mostrar; el reporting devuelve el nivel como nombre del enum (HIGH, LOW, ...).
-const RISK_COLORS = {
-  VERY_LOW: '#22c55e',
-  LOW: '#22c55e',
-  MEDIUM: '#eab308',
-  HIGH: '#ef4444',
-  VERY_HIGH: '#ef4444',
-  REJECTED: '#ef4444',
-};
-
 const RISK_LABEL = {
   VERY_LOW: 'Muy Bajo',
   LOW: 'Bajo',
@@ -122,7 +115,7 @@ function RiskDistributionReport() {
       <div className="card" style={{ marginBottom: '1.25rem' }}>
         <div className="card-header"><h3>Filtros</h3></div>
         <div className="card-body">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '.75rem' }}>
+          <div className="report-filters">
             <label><span>Desde</span>
               <input type="date" value={fechaDesde} onChange={e => setFechaDesde(e.target.value)} /></label>
             <label><span>Hasta</span>
@@ -132,9 +125,9 @@ function RiskDistributionReport() {
                 {EMPLEO_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select></label>
           </div>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-            <button onClick={run} disabled={loading}>Generar reporte</button>
-            <button className="btn-ghost" onClick={downloadPdf} disabled={!data?.hasData}>⬇ PDF</button>
+          <div className="report-actions">
+            <Button variant="primary" size="sm" onClick={run} disabled={loading}>Generar reporte</Button>
+            <Button variant="ghost" size="sm" onClick={downloadPdf} disabled={!data?.hasData}>⬇ PDF</Button>
           </div>
         </div>
       </div>
@@ -150,13 +143,24 @@ function RiskDistributionReport() {
         <>
           <div className="card" style={{ marginBottom: '1.25rem' }}>
             <div className="card-header"><h3>Resumen general</h3></div>
-            <div className="card-body" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Total evaluaciones</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.overall.totalEvaluaciones}</div></div>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Score promedio</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{fmt(data.overall.scorePromedio)}</div></div>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Desviación estándar</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{fmt(data.overall.desviacionEstandar)}</div></div>
+            <div className="card-body">
+              <div className="report-stats">
+                <StatCard
+                  value={data.overall.totalEvaluaciones}
+                  label="Total evaluaciones"
+                  accent="blue"
+                />
+                <StatCard
+                  value={fmt(data.overall.scorePromedio)}
+                  label="Score promedio"
+                  accent="purple"
+                />
+                <StatCard
+                  value={fmt(data.overall.desviacionEstandar)}
+                  label="Desviación estándar"
+                  accent="amber"
+                />
+              </div>
             </div>
           </div>
 
@@ -169,7 +173,7 @@ function RiskDistributionReport() {
                   <tbody>
                     {data.tabla.map(t => (
                       <tr key={t.nivel}>
-                        <td><span className="badge" style={{ background: RISK_COLORS[t.nivel] || '#999', color: '#fff' }}>{RISK_LABEL[t.nivel] || t.nivel}</span></td>
+                        <td><span className={`badge badge-${t.nivel}`}>{RISK_LABEL[t.nivel] || t.nivel}</span></td>
                         <td>{t.cantidad}</td>
                         <td>{pct(t.porcentaje)}</td>
                         <td>{fmt(t.scorePromedio)}</td>
@@ -184,20 +188,21 @@ function RiskDistributionReport() {
           <div className="card">
             <div className="card-header"><h3>Histograma de scores</h3></div>
             <div className="card-body">
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: '.3rem', height: '160px', borderBottom: '1px solid #ddd', paddingBottom: '.3rem' }}>
+              <div className="histogram">
                 {data.histograma.map((b, idx) => (
-                  <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.2rem' }} title={`${b.binInicio}-${b.binFin}: ${b.cantidad}`}>
-                    <div style={{
-                      width: '100%',
-                      height: `${(b.cantidad / maxBin) * 100}%`,
-                      background: 'var(--primary, #3b82f6)',
-                      minHeight: b.cantidad > 0 ? '2px' : '0',
-                      borderRadius: '2px 2px 0 0'
-                    }} />
+                  <div
+                    key={idx}
+                    className="histogram-col"
+                    title={`${b.binInicio}-${b.binFin}: ${b.cantidad}`}
+                  >
+                    <div
+                      className={`histogram-bar${b.cantidad > 0 ? ' has-count' : ''}`}
+                      style={{ height: `${(b.cantidad / maxBin) * 100}%` }}
+                    />
                   </div>
                 ))}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.75rem', color: 'var(--navy-600)', marginTop: '.3rem' }}>
+              <div className="histogram-axis">
                 {data.histograma.length > 0 && (
                   <>
                     <span>{data.histograma[0].binInicio}</span>
@@ -268,14 +273,14 @@ function ModelEffectivenessReport() {
       <div className="card" style={{ marginBottom: '1.25rem' }}>
         <div className="card-header"><h3>Filtros</h3></div>
         <div className="card-body">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '.75rem' }}>
+          <div className="report-filters">
             <label><span>Desde *</span><input type="date" value={desde} onChange={e => setDesde(e.target.value)} required /></label>
             <label><span>Hasta *</span><input type="date" value={hasta} onChange={e => setHasta(e.target.value)} required /></label>
             <label><span>Analista (opcional)</span><input type="text" value={analistaId} onChange={e => setAnalistaId(e.target.value)} placeholder="username" /></label>
           </div>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-            <button onClick={run} disabled={loading}>Generar reporte</button>
-            <button className="btn-ghost" onClick={downloadPdf} disabled={!data?.hasData}>⬇ PDF</button>
+          <div className="report-actions">
+            <Button variant="primary" size="sm" onClick={run} disabled={loading}>Generar reporte</Button>
+            <Button variant="ghost" size="sm" onClick={downloadPdf} disabled={!data?.hasData}>⬇ PDF</Button>
           </div>
         </div>
       </div>
@@ -291,15 +296,29 @@ function ModelEffectivenessReport() {
         <>
           <div className="card" style={{ marginBottom: '1.25rem' }}>
             <div className="card-header"><h3>Indicadores</h3></div>
-            <div className="card-body" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Total casos</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.indicadores.totalCasos}</div></div>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Concordancia global</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#22c55e' }}>{pct(data.indicadores.concordanceRate)}</div></div>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Override aprobación</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#eab308' }}>{pct(data.indicadores.overrideApprovalRate)}</div></div>
-              <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Override rechazo</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ef4444' }}>{pct(data.indicadores.overrideRejectionRate)}</div></div>
+            <div className="card-body">
+              <div className="report-stats">
+                <StatCard
+                  value={data.indicadores.totalCasos}
+                  label="Total casos"
+                  accent="blue"
+                />
+                <StatCard
+                  value={pct(data.indicadores.concordanceRate)}
+                  label="Concordancia global"
+                  accent="green"
+                />
+                <StatCard
+                  value={pct(data.indicadores.overrideApprovalRate)}
+                  label="Override aprobación"
+                  accent="amber"
+                />
+                <StatCard
+                  value={pct(data.indicadores.overrideRejectionRate)}
+                  label="Override rechazo"
+                  accent="purple"
+                />
+              </div>
             </div>
           </div>
 
@@ -317,7 +336,7 @@ function ModelEffectivenessReport() {
                   <tbody>
                     {levelsList.map(l => (
                       <tr key={l}>
-                        <td><span className="badge" style={{ background: RISK_COLORS[l] || '#999', color: '#fff' }}>{RISK_LABEL[l] || l}</span></td>
+                        <td><span className={`badge badge-${l}`}>{RISK_LABEL[l] || l}</span></td>
                         {decisionsList.map(d => (
                           <td key={d} style={{ fontWeight: 600 }}>{matrixMap[l]?.[d] ?? 0}</td>
                         ))}
@@ -392,14 +411,14 @@ function AnalystActivityReport() {
       <div className="card" style={{ marginBottom: '1.25rem' }}>
         <div className="card-header"><h3>Filtros</h3></div>
         <div className="card-body">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '.75rem' }}>
+          <div className="report-filters">
             <label><span>Desde *</span><input type="date" value={desde} onChange={e => setDesde(e.target.value)} required /></label>
             <label><span>Hasta *</span><input type="date" value={hasta} onChange={e => setHasta(e.target.value)} required /></label>
           </div>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-            <button onClick={run} disabled={loading}>Generar reporte</button>
-            <button className="btn-ghost" onClick={() => downloadFile('PDF')} disabled={!data?.hasData}>⬇ PDF</button>
-            <button className="btn-ghost" onClick={() => downloadFile('CSV')} disabled={!data?.hasData}>⬇ CSV</button>
+          <div className="report-actions">
+            <Button variant="primary" size="sm" onClick={run} disabled={loading}>Generar reporte</Button>
+            <Button variant="ghost" size="sm" onClick={() => downloadFile('PDF')} disabled={!data?.hasData}>⬇ PDF</Button>
+            <Button variant="ghost" size="sm" onClick={() => downloadFile('CSV')} disabled={!data?.hasData}>⬇ CSV</Button>
           </div>
         </div>
       </div>
@@ -416,15 +435,29 @@ function AnalystActivityReport() {
           {data.estadisticasEquipo && (
             <div className="card" style={{ marginBottom: '1.25rem' }}>
               <div className="card-header"><h3>Estadísticas del equipo</h3></div>
-              <div className="card-body" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-                <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Total evaluaciones</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.estadisticasEquipo.totalEvaluaciones}</div></div>
-                <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}># Analistas</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{data.estadisticasEquipo.numAnalistas}</div></div>
-                <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Tiempo medio (hrs)</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{fmt(data.estadisticasEquipo.mediaEquipoHorasHabiles)}</div></div>
-                <div><div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>Tasa aprobación equipo</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{pct(data.estadisticasEquipo.tasaAprobacionEquipo)}</div></div>
+              <div className="card-body">
+                <div className="report-stats">
+                  <StatCard
+                    value={data.estadisticasEquipo.totalEvaluaciones}
+                    label="Total evaluaciones"
+                    accent="blue"
+                  />
+                  <StatCard
+                    value={data.estadisticasEquipo.numAnalistas}
+                    label="# Analistas"
+                    accent="purple"
+                  />
+                  <StatCard
+                    value={fmt(data.estadisticasEquipo.mediaEquipoHorasHabiles)}
+                    label="Tiempo medio (hrs)"
+                    accent="amber"
+                  />
+                  <StatCard
+                    value={pct(data.estadisticasEquipo.tasaAprobacionEquipo)}
+                    label="Tasa aprobación equipo"
+                    accent="green"
+                  />
+                </div>
               </div>
             </div>
           )}
