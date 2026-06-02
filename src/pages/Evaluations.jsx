@@ -3,13 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import { searchEvaluations, getEvaluationsExportUrl } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
-const RISK_LEVELS = ['BAJO', 'MEDIO', 'ALTO'];
-const DECISIONS = ['APROBADO', 'NEGADO', 'PENDIENTE'];
+// Los valores son los enums reales del backend (RiskLevel / DecisionFilterValue).
+// Las etiquetas en español son solo para mostrar al usuario.
+const RISK_LEVELS = ['VERY_LOW', 'LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH', 'REJECTED'];
+const DECISIONS = ['APPROVED', 'REJECTED', 'MANUAL_REVIEW', 'ESCALATED'];
+
+const RISK_LABEL = {
+  VERY_LOW: 'Muy Bajo',
+  LOW: 'Bajo',
+  MEDIUM: 'Medio',
+  HIGH: 'Alto',
+  VERY_HIGH: 'Muy Alto',
+  REJECTED: 'Rechazado',
+};
+
+const DECISION_LABEL = {
+  APPROVED: 'Aprobado',
+  REJECTED: 'Rechazado',
+  MANUAL_REVIEW: 'Revisión Manual',
+  ESCALATED: 'Escalado',
+};
 
 const RISK_BADGE = {
-  BAJO: 'badge-success',
-  MEDIO: 'badge-DRAFT',
-  ALTO: 'badge-error',
+  VERY_LOW: 'badge-success',
+  LOW: 'badge-success',
+  MEDIUM: 'badge-DRAFT',
+  HIGH: 'badge-error',
+  VERY_HIGH: 'badge-error',
+  REJECTED: 'badge-error',
 };
 
 function todayISODate() {
@@ -217,7 +238,7 @@ export default function Evaluations() {
                             checked={niveles.includes(n)}
                             onChange={() => toggleInArray(niveles, n, setNiveles)}
                           />
-                          <span className={`badge ${RISK_BADGE[n]}`}>{n}</span>
+                          <span className={`badge ${RISK_BADGE[n]}`}>{RISK_LABEL[n]}</span>
                         </label>
                       ))}
                     </div>
@@ -232,7 +253,7 @@ export default function Evaluations() {
                             checked={decisiones.includes(d)}
                             onChange={() => toggleInArray(decisiones, d, setDecisiones)}
                           />
-                          {d}
+                          {DECISION_LABEL[d]}
                         </label>
                       ))}
                     </div>
@@ -284,8 +305,8 @@ export default function Evaluations() {
                       <td style={{ fontWeight: 600 }}>{r.applicantName || '—'}</td>
                       <td>{r.evaluatedAt ? new Date(r.evaluatedAt).toLocaleString('es-CO') : '—'}</td>
                       <td>{r.score != null ? Number(r.score).toFixed(2) : '—'}</td>
-                      <td><span className={`badge ${RISK_BADGE[r.riskLevel] || 'badge-DRAFT'}`}>{r.riskLevel || '—'}</span></td>
-                      <td>{r.decisionStatus || '—'}</td>
+                      <td><span className={`badge ${RISK_BADGE[r.riskLevel] || 'badge-DRAFT'}`}>{RISK_LABEL[r.riskLevel] || r.riskLevel || '—'}</span></td>
+                      <td>{DECISION_LABEL[r.decisionStatus] || r.decisionStatus || '—'}</td>
                       <td>{r.analista || '—'}</td>
                       <td>
                         <button className="btn-sm btn-secondary" onClick={() => navigate(`/evaluaciones/${r.evaluationId}`)}>

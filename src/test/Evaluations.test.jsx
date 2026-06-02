@@ -42,8 +42,8 @@ describe('<Evaluations />', () => {
         applicantName: 'Juan Perez',
         evaluatedAt: '2026-05-10T10:00:00Z',
         score: 720.5,
-        riskLevel: 'BAJO',
-        decisionStatus: 'APROBADO',
+        riskLevel: 'LOW',
+        decisionStatus: 'APPROVED',
         analista: 'jperez',
       }],
       pageNumber: 0,
@@ -57,9 +57,10 @@ describe('<Evaluations />', () => {
     expect(screen.getByText(/Búsqueda Avanzada/i)).toBeInTheDocument();
     await waitFor(() => expect(searchEvaluations).toHaveBeenCalled());
     await waitFor(() => expect(screen.getByText('Juan Perez')).toBeInTheDocument());
-    // "APROBADO" y "BAJO" aparecen como filtro-checkbox y en la fila: aceptamos múltiples
-    expect(screen.getAllByText('APROBADO').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('BAJO').length).toBeGreaterThan(0);
+    // El backend envía enums en inglés (LOW/APPROVED); la UI los muestra traducidos.
+    // "Aprobado" y "Bajo" aparecen como filtro-checkbox y en la fila: aceptamos múltiples.
+    expect(screen.getAllByText('Aprobado').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Bajo').length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no results', async () => {
