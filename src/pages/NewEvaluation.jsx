@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchApplicants, getActiveModel, executeEvaluation } from '../api/client';
+import Button from '../components/ui/Button';
+
+// Local icon — not added to icons.jsx (parallel-worktree constraint)
+const PlayIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="5,3 19,12 5,21"/>
+  </svg>
+);
 
 export default function NewEvaluation() {
   const navigate = useNavigate();
@@ -91,7 +99,7 @@ export default function NewEvaluation() {
 
       {error && <div className="alert error">{error}</div>}
 
-      <div style={{ display: 'grid', gap: '1.25rem', maxWidth: '680px' }}>
+      <div className="neweval-form-stack">
         {/* Step 1: Applicant */}
         <div className="card">
           <div className="card-header">
@@ -99,28 +107,28 @@ export default function NewEvaluation() {
           </div>
           <div className="card-body">
             {selectedApplicant ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem', background: 'var(--green-light)', borderRadius: 'var(--radius)', border: '1px solid #a7f3d0' }}>
+              <div className="neweval-selected-applicant">
                 <div>
-                  <div style={{ fontWeight: 600 }}>{selectedApplicant.nombre}</div>
-                  <div style={{ fontSize: '.8rem', color: 'var(--navy-600)', fontFamily: 'monospace' }}>
+                  <div className="neweval-selected-name">{selectedApplicant.nombre}</div>
+                  <div className="cell-mono">
                     {selectedApplicant.identificacion} — {selectedApplicant.tipo_empleo}
                   </div>
                 </div>
-                <button className="btn-sm btn-secondary" onClick={() => setSelectedApplicant(null)}>
+                <Button size="sm" variant="secondary" onClick={() => setSelectedApplicant(null)}>
                   Cambiar
-                </button>
+                </Button>
               </div>
             ) : (
               <>
-                <form onSubmit={onSearch} className="search-bar" style={{ marginBottom: '.75rem' }}>
+                <form onSubmit={onSearch} className="search-bar">
                   <input
                     placeholder="Buscar por nombre o identificación..."
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                   />
-                  <button type="submit" disabled={searching}>
+                  <Button type="submit" disabled={searching}>
                     {searching ? 'Buscando...' : 'Buscar'}
-                  </button>
+                  </Button>
                 </form>
 
                 {searchResults.length > 0 && (
@@ -137,13 +145,13 @@ export default function NewEvaluation() {
                       <tbody>
                         {searchResults.map(a => (
                           <tr key={a.id}>
-                            <td style={{ fontWeight: 600 }}>{a.nombre}</td>
-                            <td style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{a.identificacion}</td>
+                            <td className="neweval-td-name">{a.nombre}</td>
+                            <td className="cell-mono">{a.identificacion}</td>
                             <td>{a.tipo_empleo}</td>
                             <td>
-                              <button className="btn-sm btn-success" onClick={() => selectApplicant(a)}>
+                              <Button size="sm" variant="success" onClick={() => selectApplicant(a)}>
                                 Seleccionar
-                              </button>
+                              </Button>
                             </td>
                           </tr>
                         ))}
@@ -153,7 +161,7 @@ export default function NewEvaluation() {
                 )}
 
                 {searchResults.length === 0 && searchQuery === '' && (
-                  <p style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>
+                  <p className="cell-mono">
                     Buscá un solicitante por nombre o número de identificación.
                   </p>
                 )}
@@ -171,10 +179,10 @@ export default function NewEvaluation() {
             {loadingModel ? (
               <div className="loading-wrapper"><div className="spinner"></div> Cargando modelo activo...</div>
             ) : activeModel ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '.75rem 1rem', background: 'var(--blue-light)', borderRadius: 'var(--radius)', border: '1px solid #bfdbfe' }}>
+              <div className="neweval-active-model">
                 <div>
-                  <div style={{ fontWeight: 600 }}>{activeModel.nombre}</div>
-                  <div style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>
+                  <div className="neweval-model-name">{activeModel.nombre}</div>
+                  <div className="cell-mono">
                     v{activeModel.version} — <span className="badge badge-ACTIVE">ACTIVO</span>
                   </div>
                 </div>
@@ -182,30 +190,28 @@ export default function NewEvaluation() {
             ) : (
               <div className="alert warning">
                 No hay un modelo activo. Configurá y activá un modelo en{' '}
-                <button className="btn-ghost btn-sm" onClick={() => navigate('/modelos')}>
+                <Button size="sm" variant="ghost" onClick={() => navigate('/modelos')}>
                   Modelos de Scoring
-                </button>
+                </Button>
               </div>
             )}
           </div>
         </div>
 
         {/* Submit */}
-        <div style={{ display: 'flex', gap: '.75rem' }}>
-          <button
-            className="btn-secondary"
-            onClick={() => navigate('/evaluaciones')}
-          >
+        <div className="neweval-submit-row">
+          <Button variant="secondary" onClick={() => navigate('/evaluaciones')}>
             Cancelar
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onSubmit}
             disabled={submitting || !selectedApplicant || !activeModel}
+            icon={!submitting ? <PlayIcon /> : undefined}
           >
             {submitting
-              ? <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Ejecutando...</>
-              : '▶ Ejecutar Evaluación'}
-          </button>
+              ? <><span className="spinner neweval-spinner-white"></span> Ejecutando...</>
+              : 'Ejecutar Evaluación'}
+          </Button>
         </div>
       </div>
     </div>
