@@ -698,7 +698,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
 /* ── Decision form ── */
 .decision-card {
-  background: #fff;
+  background: var(--surface-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--navy-200);
   padding: 1.25rem;
@@ -980,3 +980,22 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .neweval-submit-row { display: flex; gap: .75rem; }
 .neweval-spinner-white { border-top-color: var(--fg-primary); }
 .neweval-td-name { font-weight: 600; }
+
+/* ── EvaluationDetail page — additive namespaced classes ── */
+.evaldetail-ko-value { font-weight: 700; font-size: 1.1rem; }
+.evaldetail-ko-value.ko { color: var(--red); }
+.evaldetail-ko-value.ok { color: var(--green); }
+.evaldetail-score-bar-wrapper { margin-top: .5rem; }
+.evaldetail-score-bar-labels { display: flex; justify-content: space-between; font-size: .75rem; color: var(--navy-600); margin-bottom: .3rem; }
+.evaldetail-score-bar-track { height: 8px; background: var(--navy-200); border-radius: 4px; overflow: hidden; }
+.evaldetail-score-bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.evaldetail-bar-good { background: var(--green); }
+.evaldetail-bar-mid { background: var(--amber); }
+.evaldetail-bar-bad { background: var(--red); }
+.evaldetail-table-inset { border-radius: 0; box-shadow: none; border: none; }
+.evaldetail-observations { margin-top: 1rem; padding: .75rem 1rem; background: var(--navy-100); border-radius: var(--radius); font-size: .875rem; }
+.evaldetail-observations p { margin-top: .35rem; color: var(--navy); }
+.evaldetail-char-count { font-size: .72rem; }
+.evaldetail-char-count.valid { color: var(--green-dark); }
+.evaldetail-char-count.invalid { color: var(--amber-dark); }
+.evaldetail-card-spaced { margin-bottom: 1.25rem; }
