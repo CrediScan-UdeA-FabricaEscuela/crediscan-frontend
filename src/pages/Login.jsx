@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/ui/Button';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -67,11 +68,11 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '.75rem' }}>
+          <Button type="submit" variant="primary" disabled={loading} style={{ width: '100%', marginTop: '.75rem' }}>
             {loading ? (
               <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Ingresando...</>
             ) : 'Ingresar'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
