@@ -522,7 +522,7 @@ button:hover:not(:disabled) { background: var(--blue-dark); }
 button:active:not(:disabled) { transform: translateY(1px); }
 button:disabled { opacity: .55; cursor: not-allowed; }
 .btn-secondary { background: var(--navy-200); color: var(--fg-primary); }
-.btn-secondary:hover:not(:disabled) { background: #cbd5e1; }
+.btn-secondary:hover:not(:disabled) { background: var(--border-strong); }
 .btn-danger { background: var(--red); color: #fff; }
 .btn-danger:hover:not(:disabled) { background: var(--red-dark); }
 .btn-success { background: var(--green); color: #fff; }
@@ -531,9 +531,51 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .btn-amber:hover:not(:disabled) { background: var(--amber-dark); }
 .btn-ghost { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
 .btn-ghost:hover:not(:disabled) { background: var(--blue-light); }
+.btn-outline { background: transparent; color: var(--fg-primary); border: 1px solid var(--border-strong); }
+.btn-outline:hover:not(:disabled) { background: var(--border-strong); }
 .btn-sm { padding: .3rem .7rem; font-size: .775rem; }
 .btn-xs { padding: .2rem .5rem; font-size: .72rem; }
 .btn-icon { padding: .45rem; min-width: unset; }
+/* ── Stat card layout variant: icon top-right ── */
+.stat-card-icon-top-right {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.stat-card-icon-top-right .stat-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+.stat-card-icon-top-right .stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--fg-primary);
+  line-height: 1;
+  margin-top: .25rem;
+}
+.stat-card-icon-top-right .stat-label {
+  font-size: .8rem;
+  color: var(--fg-secondary);
+  margin-top: .3rem;
+}
+.stat-card-icon-top-right .stat-caption {
+  font-size: .72rem;
+  color: var(--fg-muted);
+  margin-top: .4rem;
+}
+/* ── Page header action group ── */
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
 
 /* ── Badges ── */
 .badge {
