@@ -850,7 +850,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .filter-section { margin-top: .75rem; display: flex; flex-wrap: wrap; gap: 1.5rem; }
 .filter-group-label { font-size: .8rem; font-weight: 600; margin-bottom: .4rem; color: var(--fg-secondary); }
 .filter-chips { display: flex; gap: .5rem; flex-wrap: wrap; }
-.filter-chip { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; padding: .25rem .5rem; border-radius: 999px; border: 1px solid var(--border); font-weight: 400; }
+.filter-chip { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; padding: .25rem .5rem; border-radius: 999px; border: 1px solid var(--border-subtle); font-weight: 400; white-space: nowrap; }
 .filter-chip input { margin: 0; }
 .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; }
 .export-bar { margin-top: 1rem; display: flex; gap: .5rem; flex-wrap: wrap; }
