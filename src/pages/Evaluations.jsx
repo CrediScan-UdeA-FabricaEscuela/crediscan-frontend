@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchEvaluations, getEvaluationsExportUrl } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import Avatar from '../components/ui/Avatar';
+import Button from '../components/ui/Button';
+import { ListIcon, PlusIcon } from '../components/icons';
 
 // Los valores son los enums reales del backend (RiskLevel / DecisionFilterValue).
 // Las etiquetas en español son solo para mostrar al usuario.
@@ -24,13 +27,22 @@ const DECISION_LABEL = {
   ESCALATED: 'Escalado',
 };
 
+// D1: Fixed RISK_BADGE — repoints to REAL existing CSS badge classes
 const RISK_BADGE = {
-  VERY_LOW: 'badge-success',
-  LOW: 'badge-success',
-  MEDIUM: 'badge-DRAFT',
-  HIGH: 'badge-error',
-  VERY_HIGH: 'badge-error',
-  REJECTED: 'badge-error',
+  VERY_LOW: 'badge-VERY_LOW',
+  LOW: 'badge-LOW',
+  MEDIUM: 'badge-MEDIUM',
+  HIGH: 'badge-HIGH',
+  VERY_HIGH: 'badge-VERY_HIGH',
+  REJECTED: 'badge-REJECTED',
+};
+
+// D1: DECISION_BADGE — maps decision enum to real CSS badge classes
+const DECISION_BADGE = {
+  APPROVED: 'badge-APPROVED',
+  REJECTED: 'badge-REJECTED',
+  MANUAL_REVIEW: 'badge-MANUAL_REVIEW',
+  ESCALATED: 'badge-ESCALATED',
 };
 
 function todayISODate() {
@@ -54,12 +66,12 @@ function EvaluationLookup({ onNavigate }) {
   return (
     <form onSubmit={e => { e.preventDefault(); const t = evalId.trim(); if (t) onNavigate(t); }} className="search-bar">
       <input
+        className="cell-mono"
         placeholder="UUID de la evaluación..."
         value={evalId}
         onChange={e => setEvalId(e.target.value)}
-        style={{ fontFamily: 'monospace', fontSize: '.85rem' }}
       />
-      <button type="submit" disabled={!evalId.trim()}>Ver Evaluación</button>
+      <Button size="sm" type="submit" disabled={!evalId.trim()}>Ver Evaluación</Button>
     </form>
   );
 }
@@ -175,9 +187,9 @@ export default function Evaluations() {
           </p>
         </div>
         {canEvaluate && (
-          <button onClick={() => navigate('/evaluaciones/nueva')}>
-            ▶ Nueva Evaluación
-          </button>
+          <Button onClick={() => navigate('/evaluaciones/nueva')}>
+            <PlusIcon size={16} /> Nueva Evaluación
+          </Button>
         )}
       </div>
 
@@ -204,7 +216,7 @@ export default function Evaluations() {
             </div>
             <div className="card-body">
               <form onSubmit={onSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '.75rem' }}>
+                <div className="filter-grid">
                   <label>
                     <span>Desde *</span>
                     <input type="date" value={fechaDesde} onChange={e => setFechaDesde(e.target.value)} required />
@@ -227,12 +239,12 @@ export default function Evaluations() {
                   </label>
                 </div>
 
-                <div style={{ marginTop: '.75rem', display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
+                <div className="filter-section">
                   <div>
-                    <div style={{ fontSize: '.8rem', fontWeight: 600, marginBottom: '.3rem' }}>Nivel de riesgo</div>
-                    <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+                    <div className="filter-group-label">Nivel de riesgo</div>
+                    <div className="filter-chips">
                       {RISK_LEVELS.map(n => (
-                        <label key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontWeight: 400 }}>
+                        <label key={n} className="filter-chip">
                           <input
                             type="checkbox"
                             checked={niveles.includes(n)}
@@ -244,31 +256,31 @@ export default function Evaluations() {
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '.8rem', fontWeight: 600, marginBottom: '.3rem' }}>Decisión</div>
-                    <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
+                    <div className="filter-group-label">Decisión</div>
+                    <div className="filter-chips">
                       {DECISIONS.map(d => (
-                        <label key={d} style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontWeight: 400 }}>
+                        <label key={d} className="filter-chip">
                           <input
                             type="checkbox"
                             checked={decisiones.includes(d)}
                             onChange={() => toggleInArray(decisiones, d, setDecisiones)}
                           />
-                          {DECISION_LABEL[d]}
+                          <span className={`badge ${DECISION_BADGE[d]}`}>{DECISION_LABEL[d]}</span>
                         </label>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                <div style={{ marginTop: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-                  <button type="submit" disabled={loading}>Buscar</button>
-                  <button type="button" className="btn-secondary" onClick={onClearFilters}>Limpiar filtros</button>
-                  <button type="button" className="btn-ghost" onClick={() => downloadExport('CSV')} disabled={!hasSearched || rows.length === 0}>
-                    ⬇ Exportar CSV
-                  </button>
-                  <button type="button" className="btn-ghost" onClick={() => downloadExport('PDF')} disabled={!hasSearched || rows.length === 0}>
-                    ⬇ Exportar PDF
-                  </button>
+                <div className="export-bar">
+                  <Button size="sm" type="submit" disabled={loading}>Buscar</Button>
+                  <Button size="sm" variant="secondary" type="button" onClick={onClearFilters}>Limpiar filtros</Button>
+                  <Button size="sm" variant="ghost" type="button" onClick={() => downloadExport('CSV')} disabled={!hasSearched || rows.length === 0}>
+                    Exportar CSV
+                  </Button>
+                  <Button size="sm" variant="ghost" type="button" onClick={() => downloadExport('PDF')} disabled={!hasSearched || rows.length === 0}>
+                    Exportar PDF
+                  </Button>
                 </div>
               </form>
             </div>
@@ -280,7 +292,9 @@ export default function Evaluations() {
             <div className="loading-wrapper"><div className="spinner"></div> Cargando...</div>
           ) : !hasSearched ? null : rows.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-icon">📋</div>
+              <div className="empty-state-icon">
+                <ListIcon size={40} />
+              </div>
               <p>No se encontraron evaluaciones con los filtros aplicados.</p>
             </div>
           ) : (
@@ -301,17 +315,20 @@ export default function Evaluations() {
                 <tbody>
                   {rows.map(r => (
                     <tr key={r.evaluationId}>
-                      <td style={{ fontFamily: 'monospace', fontSize: '.75rem' }}>{String(r.evaluationId).slice(0, 8)}…</td>
-                      <td style={{ fontWeight: 600 }}>{r.applicantName || '—'}</td>
+                      <td className="cell-mono">{String(r.evaluationId).slice(0, 8)}…</td>
+                      <td className="cell-name">
+                        <Avatar name={r.applicantName} size="sm" />
+                        <span>{r.applicantName || '—'}</span>
+                      </td>
                       <td>{r.evaluatedAt ? new Date(r.evaluatedAt).toLocaleString('es-CO') : '—'}</td>
                       <td>{r.score != null ? Number(r.score).toFixed(2) : '—'}</td>
                       <td><span className={`badge ${RISK_BADGE[r.riskLevel] || 'badge-DRAFT'}`}>{RISK_LABEL[r.riskLevel] || r.riskLevel || '—'}</span></td>
-                      <td>{DECISION_LABEL[r.decisionStatus] || r.decisionStatus || '—'}</td>
+                      <td><span className={`badge ${DECISION_BADGE[r.decisionStatus] || 'badge-DRAFT'}`}>{DECISION_LABEL[r.decisionStatus] || r.decisionStatus || '—'}</span></td>
                       <td>{r.analista || '—'}</td>
                       <td>
-                        <button className="btn-sm btn-secondary" onClick={() => navigate(`/evaluaciones/${r.evaluationId}`)}>
+                        <Button size="sm" variant="secondary" onClick={() => navigate(`/evaluaciones/${r.evaluationId}`)}>
                           Ver
-                        </button>
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -319,21 +336,23 @@ export default function Evaluations() {
               </table>
 
               <div className="pagination">
-                <button
-                  className="btn-sm btn-secondary"
+                <Button
+                  size="sm"
+                  variant="outline"
                   disabled={page === 0 || loading}
                   onClick={() => load(page - 1)}
                 >
                   ← Anterior
-                </button>
+                </Button>
                 <span>Página {page + 1} de {totalPages || 1}</span>
-                <button
-                  className="btn-sm btn-secondary"
+                <Button
+                  size="sm"
+                  variant="outline"
                   disabled={page >= totalPages - 1 || loading}
                   onClick={() => load(page + 1)}
                 >
                   Siguiente →
-                </button>
+                </Button>
               </div>
             </div>
           )}
