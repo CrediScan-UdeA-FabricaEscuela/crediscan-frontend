@@ -81,10 +81,14 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-800) 60%, #1e3a5f 100%);
+  background:
+    radial-gradient(60% 50% at 15% 20%, rgba(6,182,212,.10), transparent 60%),
+    radial-gradient(55% 50% at 85% 80%, rgba(168,85,247,.14), transparent 60%),
+    var(--surface-primary);
 }
 .login-card {
-  background: #fff;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   padding: 2.5rem;
   border-radius: var(--radius-lg);
   width: 100%;
@@ -109,19 +113,19 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
   font-weight: 700;
   font-size: 1.1rem;
 }
-.login-card h1 { font-size: 1.6rem; font-weight: 700; color: var(--navy); }
-.login-card .subtitle { color: var(--navy-600); font-size: .875rem; margin-bottom: 1.75rem; margin-top: .25rem; }
+.login-card h1 { font-size: 1.6rem; font-weight: 700; color: var(--fg-primary); }
+.login-card .subtitle { color: var(--fg-muted); font-size: .875rem; margin-bottom: 1.75rem; margin-top: .25rem; }
 .login-demo {
   background: var(--blue-light);
-  border: 1px solid #bfdbfe;
+  border: 1px solid rgba(168,85,247,.30);
   border-radius: var(--radius);
   padding: .75rem 1rem;
   margin-bottom: 1.25rem;
   font-size: .8rem;
-  color: var(--blue-dark);
+  color: var(--fg-muted);
 }
-.login-demo strong { display: block; margin-bottom: .25rem; font-size: .8rem; }
-.login-demo code { font-family: monospace; background: rgba(59,130,246,.12); padding: .1rem .3rem; border-radius: 3px; }
+.login-demo strong { display: block; margin-bottom: .25rem; font-size: .8rem; color: var(--accent-soft); }
+.login-demo code { font-family: monospace; background: var(--surface-elevated); color: var(--accent-soft); padding: .1rem .3rem; border-radius: 3px; }
 
 /* ── Layout (Sidebar) ── */
 .layout {
@@ -482,7 +486,7 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+  box-shadow: 0 0 0 3px var(--purple-light);
 }
 textarea { resize: vertical; min-height: 80px; }
 .form-card {
