@@ -483,9 +483,9 @@ export default function Reports() {
   const canDistribution = ['ADMIN', 'RISK_MANAGER'].includes(role);
 
   const availableTabs = [
-    canDistribution && { id: 'distribucion', label: 'Distribución de Riesgo (HU-15)', cmp: <RiskDistributionReport /> },
-    canEffectiveness && { id: 'efectividad', label: 'Efectividad del Modelo (HU-16)', cmp: <ModelEffectivenessReport /> },
-    canActivity && { id: 'actividad', label: 'Actividad de Analistas (HU-17)', cmp: <AnalystActivityReport /> },
+    canDistribution && { id: 'distribucion', label: 'Distribución de Riesgo', cmp: <RiskDistributionReport /> },
+    canEffectiveness && { id: 'efectividad', label: 'Efectividad del Modelo', cmp: <ModelEffectivenessReport /> },
+    canActivity && { id: 'actividad', label: 'Actividad de Analistas', cmp: <AnalystActivityReport /> },
   ].filter(Boolean);
 
   const [active, setActive] = useState(availableTabs[0]?.id);
@@ -510,17 +510,12 @@ export default function Reports() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '.5rem', borderBottom: '2px solid #e5e7eb', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="tabs">
         {availableTabs.map(t => (
           <button
             key={t.id}
             onClick={() => setActive(t.id)}
-            className={active === t.id ? '' : 'btn-ghost'}
-            style={{
-              borderRadius: '6px 6px 0 0',
-              borderBottom: active === t.id ? '2px solid var(--primary, #3b82f6)' : '2px solid transparent',
-              marginBottom: '-2px',
-            }}
+            className={active === t.id ? 'tab-btn active' : 'tab-btn'}
           >
             {t.label}
           </button>
