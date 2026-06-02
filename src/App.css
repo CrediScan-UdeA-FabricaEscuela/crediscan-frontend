@@ -950,3 +950,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .users-role-hint { font-size: .78rem; color: var(--fg-secondary); margin-top: .2rem; }
 /* ── RegisterApplicant page — additive namespaced classes ── */
 .register-spinner { border-top-color: #fff; }
+/* ── FinancialData page — additive namespaced classes ── */
+.financial-form { max-width: 680px; }
+.financial-form .spinner { border-top-color: var(--fg-primary); }
+.financial-section-title { font-weight: 600; font-size: .9rem; margin-bottom: .75rem; color: var(--fg-secondary); }
+.financial-checkbox-row { display: flex; flex-direction: row; align-items: center; gap: .75rem; margin-bottom: .75rem; }
+.financial-checkbox-row input[type=checkbox] { width: auto; }
+.financial-id-code { font-family: var(--font-caption); font-size: .8rem; color: var(--fg-muted); }
+.financial-alert-btn { margin-left: 1rem; }

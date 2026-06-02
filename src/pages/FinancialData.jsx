@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { addFinancialData } from '../api/client';
+import Button from '../components/ui/Button';
 
 export default function FinancialData() {
   const { id } = useParams();
@@ -56,104 +57,104 @@ export default function FinancialData() {
 
   return (
     <div>
-      <button className="back-link" onClick={() => navigate('/solicitantes')}>
+      <Button className="back-link" onClick={() => navigate('/solicitantes')}>
         ← Volver a Solicitantes
-      </button>
+      </Button>
 
       <div className="page-header">
         <div className="page-title-group">
           <h2>Datos Financieros</h2>
-          <p>Solicitante ID: <code style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{id}</code></p>
+          <p>Solicitante ID: <code className="financial-id-code">{id}</code></p>
         </div>
       </div>
 
       {success && (
         <div className="alert success">
           ✓ Datos financieros guardados correctamente.
-          <button
-            className="btn-sm btn-secondary"
-            style={{ marginLeft: '1rem' }}
+          <Button
+            variant="secondary"
+            size="sm"
+            className="financial-alert-btn"
             onClick={() => navigate('/evaluaciones/nueva?applicantId=' + id)}
           >
             Ir a Nueva Evaluación
-          </button>
+          </Button>
         </div>
       )}
       {error && <div className="alert error">{error}</div>}
 
-      <form onSubmit={onSubmit} className="form-card" style={{ maxWidth: '680px' }}>
-        <div style={{ fontWeight: 600, fontSize: '.9rem', marginBottom: '.75rem', color: 'var(--navy-700)' }}>
+      <form onSubmit={onSubmit} className="form-card financial-form">
+        <div className="financial-section-title">
           Información de Ingresos y Patrimonio
         </div>
         <div className="form-grid">
           <div className="form-group">
-            <label>Ingreso Anual (COP) *</label>
-            <input type="number" name="annualIncome" value={form.annualIncome} onChange={onChange} min="0" step="0.01" required placeholder="0" />
+            <label htmlFor="annualIncome">Ingreso Anual (COP) *</label>
+            <input id="annualIncome" type="number" name="annualIncome" value={form.annualIncome} onChange={onChange} min="0" step="0.01" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Gastos Mensuales (COP) *</label>
-            <input type="number" name="monthlyExpenses" value={form.monthlyExpenses} onChange={onChange} min="0" step="0.01" required placeholder="0" />
+            <label htmlFor="monthlyExpenses">Gastos Mensuales (COP) *</label>
+            <input id="monthlyExpenses" type="number" name="monthlyExpenses" value={form.monthlyExpenses} onChange={onChange} min="0" step="0.01" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Deudas Actuales (COP) *</label>
-            <input type="number" name="currentDebts" value={form.currentDebts} onChange={onChange} min="0" step="0.01" required placeholder="0" />
+            <label htmlFor="currentDebts">Deudas Actuales (COP) *</label>
+            <input id="currentDebts" type="number" name="currentDebts" value={form.currentDebts} onChange={onChange} min="0" step="0.01" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Valor de Activos (COP) *</label>
-            <input type="number" name="assetsValue" value={form.assetsValue} onChange={onChange} min="0" step="0.01" required placeholder="0" />
+            <label htmlFor="assetsValue">Valor de Activos (COP) *</label>
+            <input id="assetsValue" type="number" name="assetsValue" value={form.assetsValue} onChange={onChange} min="0" step="0.01" required placeholder="0" />
           </div>
           <div className="form-group form-full">
-            <label>Patrimonio Declarado (COP) *</label>
-            <input type="number" name="declaredPatrimony" value={form.declaredPatrimony} onChange={onChange} min="0" step="0.01" required placeholder="0" />
+            <label htmlFor="declaredPatrimony">Patrimonio Declarado (COP) *</label>
+            <input id="declaredPatrimony" type="number" name="declaredPatrimony" value={form.declaredPatrimony} onChange={onChange} min="0" step="0.01" required placeholder="0" />
           </div>
         </div>
 
         <hr className="section-divider" />
-        <div style={{ fontWeight: 600, fontSize: '.9rem', marginBottom: '.75rem', color: 'var(--navy-700)' }}>
+        <div className="financial-section-title">
           Historial Crediticio
         </div>
         <div className="form-grid">
           <div className="form-group">
-            <label>Meses de Historial *</label>
-            <input type="number" name="creditHistoryMonths" value={form.creditHistoryMonths} onChange={onChange} min="0" required placeholder="0" />
+            <label htmlFor="creditHistoryMonths">Meses de Historial *</label>
+            <input id="creditHistoryMonths" type="number" name="creditHistoryMonths" value={form.creditHistoryMonths} onChange={onChange} min="0" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Mora últimos 12 meses *</label>
-            <input type="number" name="defaultsLast12m" value={form.defaultsLast12m} onChange={onChange} min="0" required placeholder="0" />
+            <label htmlFor="defaultsLast12m">Mora últimos 12 meses *</label>
+            <input id="defaultsLast12m" type="number" name="defaultsLast12m" value={form.defaultsLast12m} onChange={onChange} min="0" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Mora últimos 24 meses *</label>
-            <input type="number" name="defaultsLast24m" value={form.defaultsLast24m} onChange={onChange} min="0" required placeholder="0" />
+            <label htmlFor="defaultsLast24m">Mora últimos 24 meses *</label>
+            <input id="defaultsLast24m" type="number" name="defaultsLast24m" value={form.defaultsLast24m} onChange={onChange} min="0" required placeholder="0" />
           </div>
           <div className="form-group">
-            <label>Score Buró Externo</label>
-            <input type="number" name="externalBureauScore" value={form.externalBureauScore} onChange={onChange} min="0" max="1000" placeholder="Opcional" />
+            <label htmlFor="externalBureauScore">Score Buró Externo</label>
+            <input id="externalBureauScore" type="number" name="externalBureauScore" value={form.externalBureauScore} onChange={onChange} min="0" max="1000" placeholder="Opcional" />
           </div>
           <div className="form-group">
-            <label>Productos Crédito Activos *</label>
-            <input type="number" name="activeCreditProducts" value={form.activeCreditProducts} onChange={onChange} min="0" required placeholder="0" />
+            <label htmlFor="activeCreditProducts">Productos Crédito Activos *</label>
+            <input id="activeCreditProducts" type="number" name="activeCreditProducts" value={form.activeCreditProducts} onChange={onChange} min="0" required placeholder="0" />
           </div>
         </div>
 
-        <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '.75rem', marginBottom: '.75rem' }}>
+        <div className="financial-checkbox-row">
           <input
             type="checkbox"
             name="hasOutstandingDefaults"
             id="hasOutstandingDefaults"
             checked={form.hasOutstandingDefaults}
             onChange={onChange}
-            style={{ width: 'auto' }}
           />
-          <label htmlFor="hasOutstandingDefaults" style={{ margin: 0 }}>Tiene mora vigente pendiente</label>
+          <label htmlFor="hasOutstandingDefaults">Tiene mora vigente pendiente</label>
         </div>
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate('/solicitantes')}>
+          <Button variant="secondary" type="button" onClick={() => navigate('/solicitantes')}>
             Cancelar
-          </button>
-          <button type="submit" disabled={loading}>
-            {loading ? <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Guardando...</> : 'Guardar Datos Financieros'}
-          </button>
+          </Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? <><span className="spinner"></span> Guardando...</> : 'Guardar Datos Financieros'}
+          </Button>
         </div>
       </form>
     </div>
