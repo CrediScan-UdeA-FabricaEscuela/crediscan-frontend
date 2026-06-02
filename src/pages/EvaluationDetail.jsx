@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEvaluation, getDecision, registerDecision, getEvaluationPdf } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { CAMPOS_DISPONIBLES } from './ScoringModels';
+import { CAMPOS_DISPONIBLES } from './scoring-models-constants';
 import Button from '../components/ui/Button';
 
 const RISK_LABELS = {
