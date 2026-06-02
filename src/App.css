@@ -999,3 +999,154 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .evaldetail-char-count.valid { color: var(--green-dark); }
 .evaldetail-char-count.invalid { color: var(--amber-dark); }
 .evaldetail-card-spaced { margin-bottom: 1.25rem; }
+
+/* ── Simulation page — namespaced additive classes ── */
+.sim-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .sim-layout { grid-template-columns: 1fr; }
+}
+
+.sim-left { display: flex; flex-direction: column; }
+.sim-right { display: flex; flex-direction: column; }
+
+/* Model row with inline ACTIVE badge */
+.sim-model-row {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.sim-model-row select { flex: 1; }
+.sim-active-badge { font-size: .65rem; flex-shrink: 0; }
+
+/* Variable rows */
+.sim-vars-list {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  margin-bottom: .75rem;
+}
+.sim-var-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: .4rem;
+  align-items: center;
+}
+
+/* Actions bar below variable rows */
+.sim-var-actions {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Scenario save inputs */
+.sim-scenario-inputs {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: .5rem;
+  margin-bottom: .5rem;
+}
+@media (max-width: 600px) {
+  .sim-scenario-inputs { grid-template-columns: 1fr; }
+}
+
+/* Result placeholder before any simulation */
+.sim-result-placeholder {
+  border: 1px dashed var(--border-strong);
+  background: transparent;
+}
+
+/* Circular score gauge */
+.sim-gauge-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.25rem 0;
+}
+.sim-gauge {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.sim-gauge-center {
+  width: 108px;
+  height: 108px;
+  background: var(--surface-card);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .1rem;
+}
+.sim-gauge-score {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--fg-primary);
+  font-family: var(--font-heading);
+}
+.sim-gauge-sublabel {
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--fg-muted);
+}
+.sim-gauge-status {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+/* Section title inside result card */
+.sim-section-title {
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  margin-bottom: .5rem;
+}
+
+/* Contribution cell in breakdown table */
+.sim-contrib {
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+/* KO activated status cells */
+.sim-ko-activated {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  color: var(--danger);
+  font-weight: 600;
+  font-size: .825rem;
+}
+.sim-ko-inactive {
+  color: var(--fg-secondary);
+  font-size: .825rem;
+}
+.sim-ko-msg {
+  display: flex;
+  align-items: flex-start;
+  gap: .4rem;
+}
+
+/* Breakdown table resets border-radius from .table-wrapper inside a card */
+.sim-breakdown-table {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: none;
+}
