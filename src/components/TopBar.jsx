@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { SearchIcon, PlusIcon } from './icons';
@@ -33,12 +34,23 @@ export default function TopBar() {
   const { auth } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const label = resolveBreadcrumb(location.pathname);
   const initial = (auth?.username || 'U').charAt(0).toUpperCase();
 
   function handleNewEvaluation() {
     navigate('/evaluaciones/nueva');
+  }
+
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const trimmed = searchTerm.trim();
+    if (trimmed) {
+      navigate('/solicitantes?q=' + encodeURIComponent(trimmed));
+    } else {
+      navigate('/solicitantes');
+    }
   }
 
   return (
@@ -51,7 +63,7 @@ export default function TopBar() {
       </div>
 
       {/* Center: search */}
-      <div className="topbar-search">
+      <form className="topbar-search" onSubmit={handleSearchSubmit}>
         <span className="topbar-search-icon">
           <SearchIcon size={16} />
         </span>
@@ -59,9 +71,10 @@ export default function TopBar() {
           type="text"
           placeholder="Buscar solicitante..."
           className="topbar-search-input"
-          readOnly
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
         />
-      </div>
+      </form>
 
       {/* Right: actions + avatar */}
       <div className="topbar-actions">
