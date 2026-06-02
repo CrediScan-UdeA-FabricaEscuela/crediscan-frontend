@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchApplicants } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import Avatar from '../components/ui/Avatar';
+import Button from '../components/ui/Button';
+import { UsersIcon } from '../components/icons';
 
-const EMPLEO_LABELS = {
-  EMPLEADO: 'Empleado',
-  INDEPENDIENTE: 'Independiente',
-  PENSIONADO: 'Pensionado',
-  DESEMPLEADO: 'Desempleado',
-};
+const PAGE_SIZE = 10;
 
 export default function Applicants() {
   const [rows, setRows] = useState([]);
@@ -46,6 +44,9 @@ export default function Applicants() {
     load(query, 0);
   }
 
+  const from = totalElements === 0 ? 0 : page * PAGE_SIZE + 1;
+  const to = page * PAGE_SIZE + rows.length;
+
   return (
     <div>
       <div className="page-header">
@@ -53,7 +54,7 @@ export default function Applicants() {
           <h2>Solicitantes</h2>
           <p>{totalElements} registros totales</p>
         </div>
-        <button onClick={() => navigate('/solicitantes/nuevo')}>+ Nuevo Solicitante</button>
+        <Button onClick={() => navigate('/solicitantes/nuevo')}>+ Nuevo Solicitante</Button>
       </div>
 
       <form onSubmit={onSearch} className="search-bar">
@@ -62,11 +63,15 @@ export default function Applicants() {
           value={query}
           onChange={e => setQuery(e.target.value)}
         />
-        <button type="submit">Buscar</button>
+        <Button type="submit">Buscar</Button>
         {query && (
-          <button type="button" className="btn-secondary" onClick={() => { setQuery(''); setPage(0); load('', 0); }}>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={() => { setQuery(''); setPage(0); load('', 0); }}
+          >
             Limpiar
-          </button>
+          </Button>
         )}
       </form>
 
@@ -76,7 +81,9 @@ export default function Applicants() {
         <div className="loading-wrapper"><div className="spinner"></div> Cargando...</div>
       ) : rows.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">👤</div>
+          <div className="empty-state-icon">
+            <UsersIcon size={40} />
+          </div>
           <p>No se encontraron solicitantes.</p>
         </div>
       ) : (
@@ -96,35 +103,43 @@ export default function Applicants() {
             <tbody>
               {rows.map(r => (
                 <tr key={r.id}>
-                  <td style={{ fontWeight: 600 }}>{r.nombre}</td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{r.identificacion}</td>
-                  <td><span className="badge badge-DRAFT">{EMPLEO_LABELS[r.tipo_empleo] || r.tipo_empleo}</span></td>
+                  <td className="cell-name">
+                    <Avatar name={r.nombre} size="sm" />
+                    <span>{r.nombre}</span>
+                  </td>
+                  <td className="cell-mono">{r.identificacion}</td>
+                  <td>
+                    <span className={`badge badge-empleo-${r.tipo_empleo}`}>
+                      {r.tipo_empleo}
+                    </span>
+                  </td>
                   <td>${Number(r.ingresos_mensuales).toLocaleString('es-CO')}</td>
                   <td>{r.antiguedad_laboral} meses</td>
                   <td>{r.phone || r.telefono || '—'}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap' }}>
-                      <button
-                        className="btn-sm btn-secondary"
-                        onClick={() => navigate(`/solicitantes/${r.id}/editar`)}
+                  <td className="cell-actions">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => navigate(`/solicitantes/${r.id}/editar`)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => navigate(`/solicitantes/${r.id}/financiero`)}
+                    >
+                      Financiero
+                    </Button>
+                    {canEvaluate && (
+                      <Button
+                        size="sm"
+                        variant="success"
+                        onClick={() => navigate(`/evaluaciones/nueva?applicantId=${r.id}`)}
                       >
-                        Editar
-                      </button>
-                      <button
-                        className="btn-sm btn-ghost"
-                        onClick={() => navigate(`/solicitantes/${r.id}/financiero`)}
-                      >
-                        Financiero
-                      </button>
-                      {canEvaluate && (
-                        <button
-                          className="btn-sm btn-success"
-                          onClick={() => navigate(`/evaluaciones/nueva?applicantId=${r.id}`)}
-                        >
-                          Evaluar
-                        </button>
-                      )}
-                    </div>
+                        Evaluar
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -132,21 +147,28 @@ export default function Applicants() {
           </table>
 
           <div className="pagination">
-            <button
-              className="btn-sm btn-secondary"
-              disabled={page === 0}
-              onClick={() => setPage(p => p - 1)}
-            >
-              ← Anterior
-            </button>
-            <span>Página {page + 1} de {totalPages || 1}</span>
-            <button
-              className="btn-sm btn-secondary"
-              disabled={page >= totalPages - 1}
-              onClick={() => setPage(p => p + 1)}
-            >
-              Siguiente →
-            </button>
+            <span className="pagination-info">
+              Mostrando {from}–{to} de {totalElements} registros
+            </span>
+            <div className="pagination-controls">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={page === 0}
+                onClick={() => setPage(p => p - 1)}
+              >
+                ← Anterior
+              </Button>
+              <span>Página {page + 1} de {totalPages || 1}</span>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={page >= totalPages - 1}
+                onClick={() => setPage(p => p + 1)}
+              >
+                Siguiente →
+              </Button>
+            </div>
           </div>
         </div>
       )}
