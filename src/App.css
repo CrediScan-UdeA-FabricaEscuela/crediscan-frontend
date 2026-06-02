@@ -941,3 +941,10 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .audit-resource { font-size: .8rem; }
 .audit-id { font-size: .75rem; }
 .audit-ts { white-space: nowrap; }
+/* ── Users page ── */
+.users-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+.users-form-card { max-width: unset; }
+.users-form-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--fg-primary); }
+.users-role-item { margin-bottom: .85rem; padding-bottom: .85rem; border-bottom: 1px solid var(--border-subtle); }
+.users-role-desc { font-size: .8rem; color: var(--fg-secondary); }
+.users-role-hint { font-size: .78rem; color: var(--fg-secondary); margin-top: .2rem; }
