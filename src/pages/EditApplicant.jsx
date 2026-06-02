@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getApplicant, updateApplicant } from '../api/client';
+import Button from '../components/ui/Button';
 
 const EMPLOYMENT_TYPES = ['EMPLEADO', 'INDEPENDIENTE', 'PENSIONADO', 'DESEMPLEADO'];
 
@@ -131,12 +132,12 @@ export default function EditApplicant() {
         </div>
 
         <div className="form-actions">
-          <button type="button" className="btn-secondary" onClick={() => navigate('/solicitantes')}>
+          <Button variant="secondary" onClick={() => navigate('/solicitantes')}>
             Cancelar
-          </button>
-          <button type="submit" disabled={saving}>
-            {saving ? <><span className="spinner" style={{ borderTopColor: '#fff' }}></span> Guardando...</> : 'Guardar Cambios'}
-          </button>
+          </Button>
+          <Button type="submit" variant="primary" disabled={saving}>
+            {saving ? <><span className="spinner"></span> Guardando...</> : 'Guardar Cambios'}
+          </Button>
         </div>
       </form>
     </div>
