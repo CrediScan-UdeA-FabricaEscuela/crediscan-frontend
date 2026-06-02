@@ -18,11 +18,35 @@ const EMPLEO_OPTIONS = [
   { value: 'DESEMPLEADO', label: 'Desempleado' },
 ];
 
+// Las claves son los enums reales del backend (RiskLevel). Las etiquetas en español
+// son solo para mostrar; el reporting devuelve el nivel como nombre del enum (HIGH, LOW, ...).
 const RISK_COLORS = {
-  BAJO: '#22c55e',
-  MEDIO: '#eab308',
-  ALTO: '#ef4444',
+  VERY_LOW: '#22c55e',
+  LOW: '#22c55e',
+  MEDIUM: '#eab308',
+  HIGH: '#ef4444',
+  VERY_HIGH: '#ef4444',
+  REJECTED: '#ef4444',
 };
+
+const RISK_LABEL = {
+  VERY_LOW: 'Muy Bajo',
+  LOW: 'Bajo',
+  MEDIUM: 'Medio',
+  HIGH: 'Alto',
+  VERY_HIGH: 'Muy Alto',
+  REJECTED: 'Rechazado',
+};
+
+const DECISION_LABEL = {
+  APPROVED: 'Aprobado',
+  REJECTED: 'Rechazado',
+  MANUAL_REVIEW: 'Revisión Manual',
+  ESCALATED: 'Escalado',
+};
+
+// Orden de presentación de los niveles de riesgo (valores = enums del backend).
+const RISK_ORDER = ['VERY_LOW', 'LOW', 'MEDIUM', 'HIGH', 'VERY_HIGH', 'REJECTED'];
 
 function todayDate() {
   return new Date().toISOString().slice(0, 10);
@@ -145,7 +169,7 @@ function RiskDistributionReport() {
                   <tbody>
                     {data.tabla.map(t => (
                       <tr key={t.nivel}>
-                        <td><span className="badge" style={{ background: RISK_COLORS[t.nivel] || '#999', color: '#fff' }}>{t.nivel}</span></td>
+                        <td><span className="badge" style={{ background: RISK_COLORS[t.nivel] || '#999', color: '#fff' }}>{RISK_LABEL[t.nivel] || t.nivel}</span></td>
                         <td>{t.cantidad}</td>
                         <td>{pct(t.porcentaje)}</td>
                         <td>{fmt(t.scorePromedio)}</td>
@@ -236,7 +260,7 @@ function ModelEffectivenessReport() {
     levels.add(c.riskLevel);
     decisions.add(c.decision);
   });
-  const levelsList = ['BAJO', 'MEDIO', 'ALTO'].filter(l => levels.has(l)).concat([...levels].filter(l => !['BAJO', 'MEDIO', 'ALTO'].includes(l)));
+  const levelsList = RISK_ORDER.filter(l => levels.has(l)).concat([...levels].filter(l => !RISK_ORDER.includes(l)));
   const decisionsList = [...decisions];
 
   return (
@@ -287,13 +311,13 @@ function ModelEffectivenessReport() {
                   <thead>
                     <tr>
                       <th>Nivel \ Decisión</th>
-                      {decisionsList.map(d => <th key={d}>{d}</th>)}
+                      {decisionsList.map(d => <th key={d}>{DECISION_LABEL[d] || d}</th>)}
                     </tr>
                   </thead>
                   <tbody>
                     {levelsList.map(l => (
                       <tr key={l}>
-                        <td><span className="badge" style={{ background: RISK_COLORS[l] || '#999', color: '#fff' }}>{l}</span></td>
+                        <td><span className="badge" style={{ background: RISK_COLORS[l] || '#999', color: '#fff' }}>{RISK_LABEL[l] || l}</span></td>
                         {decisionsList.map(d => (
                           <td key={d} style={{ fontWeight: 600 }}>{matrixMap[l]?.[d] ?? 0}</td>
                         ))}
@@ -315,8 +339,8 @@ function ModelEffectivenessReport() {
                     <tbody>
                       {data.overrides.map((o, i) => (
                         <tr key={i}>
-                          <td>{o.riskLevel}</td>
-                          <td>{o.decision}</td>
+                          <td>{RISK_LABEL[o.riskLevel] || o.riskLevel}</td>
+                          <td>{DECISION_LABEL[o.decision] || o.decision}</td>
                           <td>{o.count}</td>
                         </tr>
                       ))}
