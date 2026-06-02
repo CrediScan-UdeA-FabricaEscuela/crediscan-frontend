@@ -799,6 +799,33 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   line-height: 2;
 }
 
+/* ── Avatar primitive ── */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: .875rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  user-select: none;
+}
+.avatar-sm {
+  width: 28px;
+  height: 28px;
+  font-size: .75rem;
+}
+/* Accent palette: c0=accent-primary(purple), c1=accent-secondary(pink),
+   c2=accent-tertiary(cyan), c3=success(green), c4=warning(amber) */
+.avatar--c0 { background: var(--accent-primary); }
+.avatar--c1 { background: var(--accent-secondary); }
+.avatar--c2 { background: var(--accent-tertiary); }
+.avatar--c3 { background: var(--success); }
+.avatar--c4 { background: var(--warning); }
+
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
   .main-content { margin-left: 0; }

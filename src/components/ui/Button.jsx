@@ -23,6 +23,7 @@ const VARIANT_CLASS = {
 
 export default function Button({
   variant = 'primary',
+  size,
   children,
   onClick,
   disabled = false,
@@ -31,11 +32,12 @@ export default function Button({
   ...rest
 }) {
   const variantClass = VARIANT_CLASS[variant] ?? VARIANT_CLASS.primary;
+  const className = size === 'sm' ? `${variantClass} btn-sm` : variantClass;
 
   return (
     <button
       type={type}
-      className={variantClass}
+      className={className}
       onClick={onClick}
       disabled={disabled}
       {...rest}
