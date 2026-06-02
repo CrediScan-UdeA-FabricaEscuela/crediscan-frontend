@@ -9,22 +9,11 @@ import {
   deleteKnockoutRule,
   compareScoringModels,
 } from '../api/client';
+import Button from '../components/ui/Button';
+import { ModelIcon, PlusIcon, PlayIcon, ChartIcon } from '../components/icons';
+import { CAMPOS_DISPONIBLES } from './scoring-models-constants';
 
 const KO_OPERATORS = ['GT', 'LT', 'GTE', 'LTE', 'EQ', 'NEQ'];
-
-export const CAMPOS_DISPONIBLES = [
-  { value: 'ingreso_anual',             label: 'Ingreso anual' },
-  { value: 'gastos_mensuales',          label: 'Gastos mensuales' },
-  { value: 'deudas_actuales',           label: 'Deudas actuales' },
-  { value: 'valor_activos',             label: 'Valor de activos' },
-  { value: 'patrimonio_declarado',      label: 'Patrimonio declarado' },
-  { value: 'meses_historial_credito',   label: 'Meses de historial crediticio' },
-  { value: 'moras_12_meses',            label: 'Moras últimos 12 meses' },
-  { value: 'moras_24_meses',            label: 'Moras últimos 24 meses' },
-  { value: 'score_buro',                label: 'Score buró externo' },
-  { value: 'productos_credito_activos', label: 'Productos de crédito activos' },
-  { value: 'ratio_deuda_ingreso',       label: 'Ratio deuda / ingreso' },
-];
 
 const OPERATOR_LABELS = {
   GT: '> Mayor que',
@@ -108,30 +97,33 @@ function ModelRow({ model, onActivate, activating, onDelete }) {
   return (
     <>
       <tr className="expandable-row">
-        <td style={{ fontWeight: 600 }}>{model.nombre}</td>
-        <td style={{ fontFamily: 'monospace', fontSize: '.8rem', color: 'var(--navy-600)' }}>v{model.version ?? 1}</td>
+        <td><strong>{model.nombre}</strong></td>
+        <td className="cell-mono">v{model.version ?? 1}</td>
         <td><span className={`badge badge-${model.estado}`}>{model.estado}</span></td>
         <td>
-          <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap' }}>
-            <button className="btn-sm btn-secondary" onClick={toggle}>
-              {expanded ? '▲ Cerrar' : '▼ KO Rules'}
-            </button>
+          <div className="cell-actions">
+            <Button size="sm" variant="secondary" onClick={toggle}>
+              {expanded ? 'Cerrar' : 'KO Rules'}
+            </Button>
             {model.estado !== 'ACTIVE' && (
-              <button
-                className="btn-sm btn-success"
+              <Button
+                size="sm"
+                variant="success"
                 onClick={() => onActivate(model.id)}
                 disabled={activating === model.id}
+                icon={<PlayIcon size={14} />}
               >
-                {activating === model.id ? 'Activando...' : '✓ Activar'}
-              </button>
+                {activating === model.id ? 'Activando...' : 'Activar'}
+              </Button>
             )}
             {model.estado === 'DRAFT' && (
-              <button
-                className="btn-sm btn-danger"
+              <Button
+                size="sm"
+                variant="danger"
                 onClick={() => onDelete(model.id, model.nombre)}
               >
-                🗑 Eliminar
-              </button>
+                Eliminar
+              </Button>
             )}
           </div>
         </td>
@@ -142,20 +134,22 @@ function ModelRow({ model, onActivate, activating, onDelete }) {
           <td colSpan={4} style={{ padding: 0 }}>
             <div className="expand-panel">
               <div className="expand-panel-inner">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.75rem' }}>
-                  <strong style={{ fontSize: '.875rem' }}>Reglas Knockout — {model.nombre}</strong>
-                  <button
-                    className="btn-sm btn-ghost"
+                <div className="expand-panel-header">
+                  <strong>Reglas Knockout — {model.nombre}</strong>
+                  <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => { setShowKoForm(!showKoForm); setKoError(''); }}
+                    icon={!showKoForm ? <PlusIcon size={14} /> : undefined}
                   >
-                    {showKoForm ? '✕ Cancelar' : '+ Agregar Regla'}
-                  </button>
+                    {showKoForm ? 'Cancelar' : 'Agregar Regla'}
+                  </Button>
                 </div>
 
                 {koError && <div className="alert error">{koError}</div>}
 
                 {showKoForm && (
-                  <form onSubmit={onSaveKo} className="inline-form" style={{ marginBottom: '.75rem' }}>
+                  <form onSubmit={onSaveKo} className="inline-form models-ko-form">
                     <div className="form-grid">
                       <div className="form-group">
                         <label>Campo *</label>
@@ -209,11 +203,11 @@ function ModelRow({ model, onActivate, activating, onDelete }) {
                         />
                       </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '.5rem', justifyContent: 'flex-end' }}>
-                      <button type="button" className="btn-sm btn-secondary" onClick={() => setShowKoForm(false)}>Cancelar</button>
-                      <button type="submit" className="btn-sm" disabled={savingKo}>
+                    <div className="form-actions">
+                      <Button size="sm" variant="secondary" type="button" onClick={() => setShowKoForm(false)}>Cancelar</Button>
+                      <Button size="sm" type="submit" disabled={savingKo}>
                         {savingKo ? 'Guardando...' : 'Guardar Regla'}
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 )}
@@ -223,7 +217,7 @@ function ModelRow({ model, onActivate, activating, onDelete }) {
                 ) : rulesError ? (
                   <div className="alert error">{rulesError}</div>
                 ) : rules.length === 0 ? (
-                  <p style={{ fontSize: '.8rem', color: 'var(--navy-600)', textAlign: 'center', padding: '.75rem' }}>
+                  <p className="ko-empty-msg">
                     Sin reglas KO configuradas para este modelo.
                   </p>
                 ) : (
@@ -241,18 +235,19 @@ function ModelRow({ model, onActivate, activating, onDelete }) {
                     <tbody>
                       {rules.map(r => (
                         <tr key={r.id}>
-                          <td style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{getCampoLabel(r.campo)}</td>
-                          <td><span className="badge badge-DRAFT">{r.operador}</span></td>
+                          <td className="cell-mono">{getCampoLabel(r.campo)}</td>
+                          <td><span className="badge">{r.operador}</span></td>
                           <td>{r.umbral}</td>
                           <td>{r.prioridad}</td>
-                          <td style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>{r.mensaje}</td>
+                          <td className="cell-mono">{r.mensaje}</td>
                           <td>
-                            <button
-                              className="btn-xs btn-danger"
+                            <Button
+                              size="xs"
+                              variant="danger"
                               onClick={() => onDeleteRule(r.id)}
                             >
                               ✕
-                            </button>
+                            </Button>
                           </td>
                         </tr>
                       ))}
@@ -278,7 +273,6 @@ export default function ScoringModels() {
   const [saveError, setSaveError] = useState('');
   const [saveSuccess, setSaveSuccess] = useState('');
   const [activating, setActivating] = useState(null);
-  const [deleting, setDeleting] = useState(null);
   const [showCompare, setShowCompare] = useState(false);
   const [compareBase, setCompareBase] = useState('');
   const [compareTarget, setCompareTarget] = useState('');
@@ -328,7 +322,6 @@ export default function ScoringModels() {
 
   async function onDelete(modelId, nombre) {
     if (!confirm(`¿Eliminar el modelo "${nombre}"? Esta acción no se puede deshacer.`)) return;
-    setDeleting(modelId);
     setSaveError('');
     setSaveSuccess('');
     try {
@@ -337,8 +330,6 @@ export default function ScoringModels() {
       loadModels();
     } catch (err) {
       setSaveError(err.message);
-    } finally {
-      setDeleting(null);
     }
   }
 
@@ -367,21 +358,28 @@ export default function ScoringModels() {
           <h2>Modelos de Scoring</h2>
           <p>{models.length} modelos configurados</p>
         </div>
-        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-          <button className="btn-secondary" onClick={() => { setShowCompare(!showCompare); setCompareError(''); setCompareResult(null); }}>
-            {showCompare ? '✕ Cerrar comparación' : '⇄ Comparar modelos'}
-          </button>
-          <button onClick={() => { setShowForm(!showForm); setSaveError(''); }}>
-            {showForm ? '✕ Cancelar' : '+ Crear Modelo'}
-          </button>
+        <div className="cell-actions">
+          <Button
+            variant="secondary"
+            icon={<ChartIcon size={16} />}
+            onClick={() => { setShowCompare(!showCompare); setCompareError(''); setCompareResult(null); }}
+          >
+            {showCompare ? 'Cerrar comparación' : 'Comparar modelos'}
+          </Button>
+          <Button
+            icon={!showForm ? <PlusIcon size={16} /> : undefined}
+            onClick={() => { setShowForm(!showForm); setSaveError(''); }}
+          >
+            {showForm ? 'Cancelar' : 'Crear Modelo'}
+          </Button>
         </div>
       </div>
 
       {showCompare && (
-        <div className="card" style={{ marginBottom: '1.25rem' }}>
+        <div className="card models-create-card">
           <div className="card-header"><h3>Comparar modelos (HU-08)</h3></div>
           <div className="card-body">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '.5rem', alignItems: 'end' }}>
+            <div className="compare-grid">
               <label>
                 <span>Modelo base</span>
                 <select value={compareBase} onChange={e => setCompareBase(e.target.value)}>
@@ -396,20 +394,14 @@ export default function ScoringModels() {
                   {models.map(m => <option key={m.id} value={m.id}>{m.nombre} v{m.version}</option>)}
                 </select>
               </label>
-              <button onClick={onCompare} disabled={comparing}>{comparing ? 'Comparando...' : 'Comparar'}</button>
+              <Button onClick={onCompare} disabled={comparing}>
+                {comparing ? 'Comparando...' : 'Comparar'}
+              </Button>
             </div>
-            {compareError && <div className="alert error" style={{ marginTop: '.75rem' }}>{compareError}</div>}
+            {compareError && <div className="alert error compare-error">{compareError}</div>}
             {compareResult && (
-              <div style={{ marginTop: '1rem' }}>
-                <pre style={{
-                  background: '#0b1220',
-                  color: '#d1d5db',
-                  padding: '1rem',
-                  borderRadius: '6px',
-                  fontSize: '.78rem',
-                  maxHeight: '400px',
-                  overflow: 'auto'
-                }}>{JSON.stringify(compareResult, null, 2)}</pre>
+              <div className="compare-result">
+                <pre className="compare-pre">{JSON.stringify(compareResult, null, 2)}</pre>
               </div>
             )}
           </div>
@@ -421,7 +413,7 @@ export default function ScoringModels() {
       {error && <div className="alert error">{error}</div>}
 
       {showForm && (
-        <div className="card" style={{ marginBottom: '1.25rem', maxWidth: '560px' }}>
+        <div className="card models-create-card">
           <div className="card-header">
             <h3>Nuevo Modelo</h3>
           </div>
@@ -445,8 +437,8 @@ export default function ScoringModels() {
                 />
               </div>
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>Cancelar</button>
-                <button type="submit" disabled={saving}>{saving ? 'Creando...' : 'Crear Modelo'}</button>
+                <Button variant="secondary" type="button" onClick={() => setShowForm(false)}>Cancelar</Button>
+                <Button type="submit" disabled={saving}>{saving ? 'Creando...' : 'Crear Modelo'}</Button>
               </div>
             </form>
           </div>
@@ -457,7 +449,7 @@ export default function ScoringModels() {
         <div className="loading-wrapper"><div className="spinner"></div> Cargando modelos...</div>
       ) : models.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">🏗</div>
+          <div className="empty-state-icon"><ModelIcon size={40} /></div>
           <p>No hay modelos de scoring configurados.</p>
         </div>
       ) : (
