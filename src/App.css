@@ -1,48 +1,79 @@
 /* ── CSS Variables ── */
 :root {
-  --navy: #0f172a;
-  --navy-800: #1e293b;
-  --navy-700: #334155;
-  --navy-600: #475569;
-  --navy-400: #94a3b8;
-  --navy-200: #e2e8f0;
-  --navy-100: #f1f5f9;
-  --blue: #3b82f6;
-  --blue-dark: #2563eb;
-  --blue-light: #eff6ff;
-  --green: #10b981;
-  --green-dark: #059669;
-  --green-light: #ecfdf5;
-  --amber: #f59e0b;
-  --amber-dark: #d97706;
-  --amber-light: #fffbeb;
-  --orange: #f97316;
-  --orange-light: #fff7ed;
-  --red: #ef4444;
-  --red-dark: #dc2626;
-  --red-light: #fef2f2;
-  --teal: #14b8a6;
-  --teal-light: #f0fdfa;
-  --purple: #8b5cf6;
-  --purple-light: #f5f3ff;
+  /* ── Semantic tokens (.pen dark theme) ── */
+  --surface-primary: #0A0A0A;
+  --surface-elevated: #141417;
+  --surface-card: #18181B;
+  --accent-primary: #A855F7;
+  --accent-secondary: #EC4899;
+  --accent-tertiary: #06B6D4;
+  --accent-soft: #EDE5FE;
+  --fg-primary: #FFFFFF;
+  --fg-secondary: #71717A;
+  --fg-muted: #A1A1AA;
+  --fg-inverse: #0A0A0A;
+  --border-subtle: #27272A;
+  --border-strong: #3F3F46;
+  --success: #22C55E;
+  --warning: #EAB308;
+  --danger: #EF4444;
+  --radius-sm: 4px;
+  --radius-xl: 12px;
+
+  /* ── Font vars ── */
+  --font-heading: 'Funnel Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-caption: 'Geist', system-ui, sans-serif;
+
+  /* ── Legacy vars aliased to dark tokens (compatibility shim) ── */
+  --navy: var(--surface-primary);
+  --navy-800: var(--surface-elevated);
+  --navy-700: var(--surface-card);
+  --navy-600: var(--fg-secondary);
+  --navy-400: var(--fg-muted);
+  --navy-200: var(--border-subtle);
+  --navy-100: var(--surface-primary);
+  --blue: var(--accent-primary);
+  --blue-dark: #7C3AED;
+  --blue-light: rgba(168,85,247,.12);
+  --green: var(--success);
+  --green-dark: #16A34A;
+  --green-light: rgba(34,197,94,.12);
+  --amber: var(--warning);
+  --amber-dark: #CA8A04;
+  --amber-light: rgba(234,179,8,.12);
+  --orange: #F97316;
+  --orange-light: rgba(249,115,22,.12);
+  --red: var(--danger);
+  --red-dark: #DC2626;
+  --red-light: rgba(239,68,68,.12);
+  --teal: var(--accent-tertiary);
+  --teal-light: rgba(6,182,212,.12);
+  --purple: var(--accent-primary);
+  --purple-light: rgba(168,85,247,.12);
+
+  /* ── Layout / shape ── */
   --sidebar-width: 240px;
   --radius: 8px;
   --radius-lg: 12px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
-  --shadow-lg: 0 10px 32px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+
+  /* ── Shadows (darkened for dark surfaces) ── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.30);
+  --shadow: 0 4px 12px rgba(0,0,0,.50), 0 2px 4px rgba(0,0,0,.35);
+  --shadow-lg: 0 10px 32px rgba(0,0,0,.60), 0 4px 8px rgba(0,0,0,.40);
 }
 
 /* ── Reset & Base ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 16px; }
 body {
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  background: var(--navy-100);
-  color: var(--navy);
+  font-family: var(--font-body);
+  background-color: var(--surface-primary);
+  color: var(--fg-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
 
 /* ── Login ── */
 .login-container {
