@@ -282,7 +282,8 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
   font-size: .875rem;
   color: var(--fg-secondary);
 }
-.breadcrumb-root { color: var(--fg-muted); }
+.breadcrumb-root { color: var(--fg-muted); cursor: pointer; text-decoration: none; }
+.breadcrumb-root:hover { color: var(--fg-primary); }
 .breadcrumb-sep { color: var(--fg-muted); margin: 0 .25rem; }
 .breadcrumb-current { color: var(--fg-primary); font-weight: 500; }
 .topbar-search {

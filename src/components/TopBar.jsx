@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { SearchIcon, PlusIcon } from './icons';
 
@@ -57,7 +57,7 @@ export default function TopBar() {
     <header className="topbar">
       {/* Breadcrumb */}
       <div className="topbar-breadcrumb">
-        <span className="breadcrumb-root">Inicio</span>
+        <Link to="/dashboard" className="breadcrumb-root">Inicio</Link>
         <span className="breadcrumb-sep"> / </span>
         <span className="breadcrumb-current">{label}</span>
       </div>

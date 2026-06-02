@@ -52,6 +52,13 @@ describe('TopBar — breadcrumb', () => {
     renderTopBar('/reportes');
     expect(screen.getByText(/reportes/i)).toBeInTheDocument();
   });
+
+  it('"Inicio" renders as a link to /dashboard', () => {
+    renderTopBar('/');
+    const link = screen.getByRole('link', { name: /inicio/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/dashboard');
+  });
 });
 
 // -----------------------------------------------------------------------
