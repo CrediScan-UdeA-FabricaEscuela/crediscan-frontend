@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createUser } from '../api/client';
+import Button from '../components/ui/Button';
 
 const ROLES = ['ADMIN', 'ANALYST', 'RISK_MANAGER', 'CREDIT_SUPERVISOR'];
 
@@ -51,11 +52,11 @@ export default function Users() {
       </div>
 
       {error && <div className="alert error">{error}</div>}
-      {success && <div className="alert success">✓ {success}</div>}
+      {success && <div className="alert success">{success}</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', alignItems: 'start' }}>
-        <form onSubmit={onSubmit} className="form-card" style={{ maxWidth: 'unset' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Nuevo Usuario</h3>
+      <div className="users-layout">
+        <form onSubmit={onSubmit} className="form-card users-form-card">
+          <h3 className="users-form-title">Nuevo Usuario</h3>
 
           <div className="form-group">
             <label>Username *</label>
@@ -100,15 +101,15 @@ export default function Users() {
             <select name="rol" value={form.rol} onChange={onChange}>
               {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
-            <span style={{ fontSize: '.78rem', color: 'var(--navy-600)', marginTop: '.2rem' }}>
+            <span className="users-role-hint">
               {ROLE_DESCRIPTIONS[form.rol]}
             </span>
           </div>
 
           <div className="form-actions">
-            <button type="submit" disabled={loading}>
-              {loading ? 'Creando...' : '+ Crear Usuario'}
-            </button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Creando...' : 'Crear Usuario'}
+            </Button>
           </div>
         </form>
 
@@ -118,11 +119,11 @@ export default function Users() {
           </div>
           <div className="card-body">
             {ROLES.map(r => (
-              <div key={r} style={{ marginBottom: '.85rem', paddingBottom: '.85rem', borderBottom: '1px solid var(--navy-200)' }}>
+              <div key={r} className="users-role-item">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', marginBottom: '.2rem' }}>
                   <span className={`sidebar-role role-${r}`}>{r}</span>
                 </div>
-                <p style={{ fontSize: '.8rem', color: 'var(--navy-600)' }}>{ROLE_DESCRIPTIONS[r]}</p>
+                <p className="users-role-desc">{ROLE_DESCRIPTIONS[r]}</p>
               </div>
             ))}
           </div>
