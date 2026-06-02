@@ -153,23 +153,3 @@ describe('Login — loading state disables submit button', () => {
     });
   });
 });
-
-// ── Group 6: Demo Credentials Box ─────────────────────────────────────────
-
-describe('Login — demo credentials box', () => {
-  it('renders the demo credentials box', () => {
-    render(<Login />);
-    expect(screen.getByText(/credenciales de demo/i)).toBeInTheDocument();
-  });
-
-  it('contains the admin demo username', () => {
-    render(<Login />);
-    const adminCodes = screen.getAllByText('admin');
-    expect(adminCodes.length).toBeGreaterThan(0);
-  });
-
-  it('contains demo password hint text', () => {
-    render(<Login />);
-    expect(screen.getByText('admin123')).toBeInTheDocument();
-  });
-});

@@ -115,17 +115,6 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
 }
 .login-card h1 { font-size: 1.6rem; font-weight: 700; color: var(--fg-primary); }
 .login-card .subtitle { color: var(--fg-muted); font-size: .875rem; margin-bottom: 1.75rem; margin-top: .25rem; }
-.login-demo {
-  background: var(--blue-light);
-  border: 1px solid rgba(168,85,247,.30);
-  border-radius: var(--radius);
-  padding: .75rem 1rem;
-  margin-bottom: 1.25rem;
-  font-size: .8rem;
-  color: var(--fg-muted);
-}
-.login-demo strong { display: block; margin-bottom: .25rem; font-size: .8rem; color: var(--accent-soft); }
-.login-demo code { font-family: monospace; background: var(--surface-elevated); color: var(--accent-soft); padding: .1rem .3rem; border-radius: 3px; }
 
 /* ── Layout (Sidebar) ── */
 .layout {

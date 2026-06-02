@@ -36,13 +36,6 @@ export default function Login() {
         </div>
         <p className="subtitle">Motor de Scoring Crediticio</p>
 
-        <div className="login-demo">
-          <strong>Credenciales de demo</strong>
-          Admin: <code>admin</code> / <code>admin123</code><br />
-          Analista: <code>analista1</code> / <code>pass1234</code><br />
-          Risk Mgr: <code>riskmanager1</code> / <code>pass1234</code>
-        </div>
-
         {error && <div className="alert error">{error}</div>}
 
         <form onSubmit={onSubmit}>
