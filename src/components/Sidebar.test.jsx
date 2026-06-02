@@ -7,7 +7,7 @@ import { AuthProvider } from '../context/AuthContext';
 
 // Helper: render Sidebar with a given role via localStorage + AuthProvider.
 // This mirrors the pattern used in Evaluations.test.jsx.
-function renderSidebar(role, { onLogout } = {}) {
+function renderSidebar(role, { onLogout, route = '/dashboard' } = {}) {
   window.localStorage.setItem('token', 'tok');
   window.localStorage.setItem('role', role);
   window.localStorage.setItem('username', 'admin');
@@ -16,7 +16,7 @@ function renderSidebar(role, { onLogout } = {}) {
   // Since AuthProvider owns handleLogout we test the side-effect (localStorage cleared)
   // or override via the onLogout prop on Sidebar itself when provided.
   return render(
-    <MemoryRouter initialEntries={['/dashboard']}>
+    <MemoryRouter initialEntries={[route]}>
       <AuthProvider>
         <Sidebar onLogout={onLogout} />
       </AuthProvider>
@@ -122,6 +122,27 @@ describe('Sidebar — role gating for RISK_MANAGER', () => {
     renderSidebar('RISK_MANAGER');
     expect(screen.queryByText('Usuarios')).not.toBeInTheDocument();
     expect(screen.queryByText(/^administración$/i)).not.toBeInTheDocument();
+  });
+});
+
+// -----------------------------------------------------------------------
+// Group: active state (NavLink prefix matching)
+// -----------------------------------------------------------------------
+describe('Sidebar — active state', () => {
+  it('marks only Nueva Evaluación active on /evaluaciones/nueva (not Evaluaciones)', () => {
+    renderSidebar('ADMIN', { route: '/evaluaciones/nueva' });
+    const nueva = screen.getByRole('link', { name: /nueva evaluación/i });
+    const evaluaciones = screen.getByRole('link', { name: /^evaluaciones$/i });
+    expect(nueva.className).toContain('active');
+    expect(evaluaciones.className).not.toContain('active');
+  });
+
+  it('marks Evaluaciones active on exact /evaluaciones', () => {
+    renderSidebar('ADMIN', { route: '/evaluaciones' });
+    const evaluaciones = screen.getByRole('link', { name: /^evaluaciones$/i });
+    const nueva = screen.getByRole('link', { name: /nueva evaluación/i });
+    expect(evaluaciones.className).toContain('active');
+    expect(nueva.className).not.toContain('active');
   });
 });
 

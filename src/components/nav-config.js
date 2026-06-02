@@ -20,7 +20,7 @@ export const NAV_CONFIG = [
     label: 'Evaluaciones',
     items: [
       { to: '/evaluaciones/nueva', icon: 'play', label: 'Nueva Evaluación', roles: [ADMIN, ANALYST] },
-      { to: '/evaluaciones', icon: 'list', label: 'Evaluaciones', roles: ALL_ROLES },
+      { to: '/evaluaciones', icon: 'list', label: 'Evaluaciones', roles: ALL_ROLES, end: true },
     ],
   },
   {

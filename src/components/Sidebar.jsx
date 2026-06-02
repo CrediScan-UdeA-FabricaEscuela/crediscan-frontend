@@ -78,6 +78,7 @@ export default function Sidebar({ onLogout } = {}) {
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  end={item.end}
                   className={({ isActive }) =>
                     isActive ? 'sidebar-nav-item active' : 'sidebar-nav-item'
                   }
