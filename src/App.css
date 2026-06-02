@@ -603,6 +603,7 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .badge-ACTIVE { background: var(--green-light); color: var(--green-dark); }
 .badge-DRAFT { background: var(--navy-100); color: var(--navy-600); }
 .badge-INACTIVE { background: var(--red-light); color: var(--red-dark); }
+.badge-ARCHIVED { background: var(--navy-100); color: var(--fg-muted); }
 
 /* ── Alerts ── */
 .alert {
@@ -915,3 +916,23 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .variables-ranges-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
 .variables-campo         { font-weight: 600; font-size: .82rem; color: var(--fg-primary); }
 .variables-desc          { color: var(--fg-secondary); font-size: .8rem; }
+/* ── ScoringModels namespaced classes ── */
+.models-create-card { margin-bottom: 1.25rem; max-width: 560px; }
+.models-ko-form { margin-bottom: .75rem; }
+.expand-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; }
+.expand-panel-header strong { font-size: .875rem; }
+.ko-empty-msg { font-size: .8rem; color: var(--fg-muted); text-align: center; padding: .75rem; }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: .5rem; align-items: end; }
+.compare-error { margin-top: .75rem; }
+.compare-result { margin-top: 1rem; }
+.compare-pre {
+  background: var(--surface-elevated);
+  color: var(--fg-primary);
+  padding: 1rem;
+  border-radius: var(--radius);
+  font-size: .78rem;
+  max-height: 400px;
+  overflow: auto;
+  font-family: var(--font-caption);
+  border: 1px solid var(--border-subtle);
+}
