@@ -107,7 +107,7 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="card" style={{ marginBottom: '1.5rem' }}>
+      <div className="card card-mb">
         <div className="card-header">
           <h3>Acciones rápidas</h3>
         </div>

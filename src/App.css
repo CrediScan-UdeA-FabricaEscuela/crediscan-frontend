@@ -782,6 +782,9 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .audit-result-FAILURE { color: var(--red-dark); font-weight: 600; }
 
 /* ── Responsive ── */
+/* ── Dashboard layout helpers ── */
+.card-mb { margin-bottom: 1.5rem; }
+
 /* ── Welcome card typography ── */
 .welcome-description {
   font-size: .875rem;
