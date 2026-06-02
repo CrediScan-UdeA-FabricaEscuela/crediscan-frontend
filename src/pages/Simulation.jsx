@@ -218,7 +218,7 @@ export default function Simulation() {
       <div className="page-header">
         <div className="page-title-group">
           <h2>Simulación de Scoring</h2>
-          <p>Calculá un puntaje sin persistir y guardá escenarios reutilizables (HU-14)</p>
+          <p>Calculá un puntaje sin persistir y guardá escenarios reutilizables</p>
         </div>
       </div>
 

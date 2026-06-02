@@ -377,7 +377,7 @@ export default function ScoringModels() {
 
       {showCompare && (
         <div className="card models-create-card">
-          <div className="card-header"><h3>Comparar modelos (HU-08)</h3></div>
+          <div className="card-header"><h3>Comparar modelos</h3></div>
           <div className="card-body">
             <div className="compare-grid">
               <label>
