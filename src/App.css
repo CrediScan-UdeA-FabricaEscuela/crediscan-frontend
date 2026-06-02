@@ -851,3 +851,50 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   .form-grid { grid-template-columns: 1fr; }
   .range-row { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Reports page — additive classes (PR1) ── */
+.report-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: .75rem;
+}
+.report-actions {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.report-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.histogram {
+  display: flex;
+  align-items: flex-end;
+  gap: .3rem;
+  height: 160px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: .3rem;
+}
+.histogram-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+}
+.histogram-bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--accent-primary), var(--accent-tertiary));
+  min-height: 0;
+  border-radius: 2px 2px 0 0;
+}
+.histogram-bar.has-count { min-height: 2px; }
+.histogram-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: .75rem;
+  color: var(--fg-secondary);
+  margin-top: .3rem;
+}
