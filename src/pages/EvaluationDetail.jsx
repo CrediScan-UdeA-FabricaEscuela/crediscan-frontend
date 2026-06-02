@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getEvaluation, getDecision, registerDecision, getEvaluationPdf } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { CAMPOS_DISPONIBLES } from './ScoringModels';
+import Button from '../components/ui/Button';
 
 const RISK_LABELS = {
   VERY_LOW: 'Muy Bajo',
@@ -116,6 +117,7 @@ export default function EvaluationDetail() {
   if (!evaluation) return null;
 
   const scorePercent = Math.min(100, Math.max(0, evaluation.totalScore));
+  const scoreBarClass = scorePercent >= 70 ? 'evaldetail-bar-good' : scorePercent >= 40 ? 'evaldetail-bar-mid' : 'evaldetail-bar-bad';
 
   return (
     <div>
@@ -126,7 +128,7 @@ export default function EvaluationDetail() {
       <div className="page-header">
         <div className="page-title-group">
           <h2>Resultado de Evaluación</h2>
-          <p style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{id}</p>
+          <p className="cell-mono">{id}</p>
         </div>
         <a
           href={getEvaluationPdf(id)}
@@ -134,7 +136,7 @@ export default function EvaluationDetail() {
           rel="noreferrer"
           style={{ textDecoration: 'none' }}
         >
-          <button className="btn-secondary btn-sm">⬇ Descargar PDF</button>
+          <Button size="sm" variant="secondary">Descargar PDF</Button>
         </a>
       </div>
 
@@ -162,7 +164,7 @@ export default function EvaluationDetail() {
       )}
 
       {/* Score Summary Card */}
-      <div className="card" style={{ marginBottom: '1.25rem' }}>
+      <div className="card evaldetail-card-spaced">
         <div className="card-body">
           <div className="score-section">
             <div className="score-cell">
@@ -170,25 +172,25 @@ export default function EvaluationDetail() {
               <div className="score-label">Puntaje Total</div>
             </div>
             <div className="score-cell">
-              <div style={{ marginBottom: '.4rem' }}>
+              <div>
                 <RiskBadge level={evaluation.riskLevel} />
               </div>
               <div className="score-label">Nivel de Riesgo</div>
             </div>
             <div className="score-cell">
-              <div style={{ fontWeight: 700, fontSize: '1.1rem', color: evaluation.knockedOut ? 'var(--red)' : 'var(--green)' }}>
+              <div className={`evaldetail-ko-value ${evaluation.knockedOut ? 'ko' : 'ok'}`}>
                 {evaluation.knockedOut ? 'SÍ' : 'NO'}
               </div>
               <div className="score-label">KO Activado</div>
             </div>
             <div className="score-cell">
-              <div style={{ fontSize: '.875rem', color: 'var(--navy-700)' }}>
+              <div className="decision-field-value">
                 {evaluation.evaluatedBy || '—'}
               </div>
               <div className="score-label">Evaluado por</div>
             </div>
             <div className="score-cell">
-              <div style={{ fontSize: '.875rem', color: 'var(--navy-700)' }}>
+              <div className="decision-field-value">
                 {evaluation.evaluatedAt ? new Date(evaluation.evaluatedAt).toLocaleString('es-CO') : '—'}
               </div>
               <div className="score-label">Fecha</div>
@@ -196,20 +198,17 @@ export default function EvaluationDetail() {
           </div>
 
           {/* Score bar */}
-          <div style={{ marginTop: '.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.75rem', color: 'var(--navy-600)', marginBottom: '.3rem' }}>
+          <div className="evaldetail-score-bar-wrapper">
+            <div className="evaldetail-score-bar-labels">
               <span>0</span>
               <span>Puntaje: {evaluation.totalScore}</span>
               <span>100</span>
             </div>
-            <div style={{ height: '8px', background: 'var(--navy-200)', borderRadius: '4px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%',
-                width: `${scorePercent}%`,
-                background: scorePercent >= 70 ? 'var(--green)' : scorePercent >= 40 ? 'var(--amber)' : 'var(--red)',
-                borderRadius: '4px',
-                transition: 'width .5s ease',
-              }} />
+            <div className="evaldetail-score-bar-track">
+              <div
+                className={`evaldetail-score-bar-fill ${scoreBarClass}`}
+                style={{ width: `${scorePercent}%` }}
+              />
             </div>
           </div>
         </div>
@@ -217,11 +216,11 @@ export default function EvaluationDetail() {
 
       {/* Score Breakdown Table */}
       {evaluation.details && evaluation.details.length > 0 && (
-        <div className="card" style={{ marginBottom: '1.25rem' }}>
+        <div className="card evaldetail-card-spaced">
           <div className="card-header">
             <h3>Desglose por Variable</h3>
           </div>
-          <div className="table-wrapper" style={{ borderRadius: 0, boxShadow: 'none', border: 'none' }}>
+          <div className="table-wrapper evaldetail-table-inset">
             <table>
               <thead>
                 <tr>
@@ -293,9 +292,9 @@ export default function EvaluationDetail() {
               )}
             </div>
             {decision.observations && (
-              <div style={{ marginTop: '1rem', padding: '.75rem 1rem', background: 'var(--navy-100)', borderRadius: 'var(--radius)', fontSize: '.875rem' }}>
-                <strong style={{ fontSize: '.75rem', textTransform: 'uppercase', color: 'var(--navy-600)', letterSpacing: '.04em' }}>Observaciones</strong>
-                <p style={{ marginTop: '.35rem', color: 'var(--navy)' }}>{decision.observations}</p>
+              <div className="evaldetail-observations">
+                <strong className="decision-field-label">Observaciones</strong>
+                <p>{decision.observations}</p>
               </div>
             )}
           </div>
@@ -323,14 +322,14 @@ export default function EvaluationDetail() {
                   required
                   minLength={20}
                 />
-                <span style={{ fontSize: '.72rem', color: decisionForm.observations.length < 20 ? 'var(--amber-dark)' : 'var(--green-dark)' }}>
+                <span className={`evaldetail-char-count ${decisionForm.observations.length >= 20 ? 'valid' : 'invalid'}`}>
                   {decisionForm.observations.length} / 20 caracteres mínimos
                 </span>
               </div>
             </div>
-            <button type="submit" disabled={submittingDecision}>
+            <Button type="submit" disabled={submittingDecision}>
               {submittingDecision ? 'Registrando...' : 'Registrar Decisión'}
-            </button>
+            </Button>
           </form>
         ) : (
           <div className="alert info" style={{ marginBottom: 0 }}>
