@@ -958,3 +958,25 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .financial-checkbox-row input[type=checkbox] { width: auto; }
 .financial-id-code { font-family: var(--font-caption); font-size: .8rem; color: var(--fg-muted); }
 .financial-alert-btn { margin-left: 1rem; }
+
+/* ── NewEvaluation page ── */
+.neweval-form-stack { display: grid; gap: 1.25rem; max-width: 680px; }
+.neweval-selected-applicant {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .75rem 1rem;
+  background: var(--green-light);
+  border-radius: var(--radius);
+  border: 1px solid rgba(34,197,94,.25);
+}
+.neweval-selected-name { font-weight: 600; }
+.neweval-active-model {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .75rem 1rem;
+  background: var(--blue-light);
+  border-radius: var(--radius);
+  border: 1px solid rgba(168,85,247,.25);
+}
+.neweval-model-name { font-weight: 600; }
+.neweval-submit-row { display: flex; gap: .75rem; }
+.neweval-spinner-white { border-top-color: var(--fg-primary); }
+.neweval-td-name { font-weight: 600; }
