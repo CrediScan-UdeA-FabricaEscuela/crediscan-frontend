@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Avatar, { colorIndex } from './Avatar';
+import Avatar from './Avatar';
+import { colorIndex } from './avatar-color';
 
 // -----------------------------------------------------------------------
 // Domain: Avatar primitive
