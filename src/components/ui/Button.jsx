@@ -32,7 +32,7 @@ export default function Button({
   ...rest
 }) {
   const variantClass = VARIANT_CLASS[variant] ?? VARIANT_CLASS.primary;
-  const className = size === 'sm' ? `${variantClass} btn-sm` : variantClass;
+  const className = size === 'sm' ? `${variantClass} btn-sm` : size === 'xs' ? `${variantClass} btn-xs` : variantClass;
 
   return (
     <button

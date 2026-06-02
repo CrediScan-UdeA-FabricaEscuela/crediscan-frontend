@@ -105,4 +105,24 @@ describe('Button — size prop', () => {
     expect(btn).toHaveClass('btn-primary');
     expect(btn).not.toHaveClass('btn-sm');
   });
+
+  it('size="xs" + variant="danger" → element has both btn-danger and btn-xs', () => {
+    render(<Button variant="danger" size="xs">Delete</Button>);
+    const btn = screen.getByRole('button', { name: 'Delete' });
+    expect(btn).toHaveClass('btn-danger');
+    expect(btn).toHaveClass('btn-xs');
+  });
+
+  it('size="xs" + variant="primary" → element has both btn-primary and btn-xs', () => {
+    render(<Button variant="primary" size="xs">XS</Button>);
+    const btn = screen.getByRole('button', { name: 'XS' });
+    expect(btn).toHaveClass('btn-primary');
+    expect(btn).toHaveClass('btn-xs');
+  });
+
+  it('size="xs" does NOT add btn-sm (regression guard)', () => {
+    render(<Button variant="primary" size="xs">XS</Button>);
+    const btn = screen.getByRole('button', { name: 'XS' });
+    expect(btn).not.toHaveClass('btn-sm');
+  });
 });
