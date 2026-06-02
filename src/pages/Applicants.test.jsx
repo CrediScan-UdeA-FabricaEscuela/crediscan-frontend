@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import Applicants from './Applicants';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
@@ -45,6 +46,18 @@ function setupApi({ content = makeApplicants(), totalPages = 1, totalElements = 
   searchApplicants.mockResolvedValue({ content, totalPages, totalElements });
 }
 
+/**
+ * Render Applicants inside a MemoryRouter at a given path.
+ * When no initialEntry is provided, renders at /solicitantes (no q param).
+ */
+function renderApplicants(initialEntry = '/solicitantes') {
+  return render(
+    <MemoryRouter initialEntries={[initialEntry]}>
+      <Applicants />
+    </MemoryRouter>
+  );
+}
+
 beforeEach(() => {
   mockNavigate.mockClear();
   searchApplicants.mockReset();
@@ -57,7 +70,7 @@ describe('Applicants — row rendering from data', () => {
     setupAuth();
     setupApi({ content: makeApplicants(2) });
 
-    render(<Applicants />);
+    renderApplicants();
 
     await waitFor(() => {
       const rows = screen.getAllByRole('row');
@@ -70,7 +83,7 @@ describe('Applicants — row rendering from data', () => {
     setupAuth();
     setupApi({ content: makeApplicants(1) });
 
-    render(<Applicants />);
+    renderApplicants();
 
     await waitFor(() => {
       // Avatar renders the uppercased first initial
@@ -82,7 +95,7 @@ describe('Applicants — row rendering from data', () => {
     setupAuth();
     setupApi({ content: makeApplicants(2) });
 
-    render(<Applicants />);
+    renderApplicants();
 
     await waitFor(() => {
       // Two rows each have an avatar span (class "avatar")
@@ -100,7 +113,7 @@ describe('Applicants — search behavior', () => {
     setupAuth();
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     const input = screen.getByPlaceholderText(/buscar/i);
@@ -116,7 +129,7 @@ describe('Applicants — search behavior', () => {
     setupAuth();
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     const input = screen.getByPlaceholderText(/buscar/i);
@@ -140,7 +153,7 @@ describe('Applicants — pagination controls', () => {
     setupAuth();
     setupApi({ totalPages: 3 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     const anterior = screen.getByRole('button', { name: /anterior/i });
@@ -151,7 +164,7 @@ describe('Applicants — pagination controls', () => {
     setupAuth();
     setupApi({ content: makeApplicants(2), totalPages: 1, totalElements: 2 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     const siguiente = screen.getByRole('button', { name: /siguiente/i });
@@ -163,7 +176,7 @@ describe('Applicants — pagination controls', () => {
     setupAuth();
     setupApi({ content: makeApplicants(2), totalPages: 3, totalElements: 30 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     // Initially Siguiente should be enabled (3 pages, on page 0)
@@ -185,7 +198,7 @@ describe('Applicants — role-gated Evaluar action', () => {
     setupAuth('ADMIN');
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     expect(screen.getAllByRole('button', { name: /evaluar/i }).length).toBeGreaterThan(0);
@@ -195,7 +208,7 @@ describe('Applicants — role-gated Evaluar action', () => {
     setupAuth('ANALYST');
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     expect(screen.getAllByRole('button', { name: /evaluar/i }).length).toBeGreaterThan(0);
@@ -205,7 +218,7 @@ describe('Applicants — role-gated Evaluar action', () => {
     setupAuth('RISK_MANAGER');
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     expect(screen.queryByRole('button', { name: /evaluar/i })).not.toBeInTheDocument();
@@ -220,7 +233,7 @@ describe('Applicants — navigation targets', () => {
     setupAuth();
     setupApi();
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     await user.click(screen.getByRole('button', { name: /nuevo solicitante/i }));
@@ -233,7 +246,7 @@ describe('Applicants — navigation targets', () => {
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
     searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     await user.click(screen.getByRole('button', { name: /editar/i }));
@@ -246,7 +259,7 @@ describe('Applicants — navigation targets', () => {
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
     searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     await user.click(screen.getByRole('button', { name: /financiero/i }));
@@ -259,7 +272,7 @@ describe('Applicants — navigation targets', () => {
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
     searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
 
-    render(<Applicants />);
+    renderApplicants();
     await waitFor(() => screen.getByRole('table'));
 
     await user.click(screen.getByRole('button', { name: /evaluar/i }));
@@ -274,7 +287,7 @@ describe('Applicants — empty state', () => {
     setupAuth();
     searchApplicants.mockResolvedValue({ content: [], totalPages: 0, totalElements: 0 });
 
-    render(<Applicants />);
+    renderApplicants();
 
     await waitFor(() => {
       expect(screen.getByText(/no se encontraron solicitantes/i)).toBeInTheDocument();
@@ -290,11 +303,59 @@ describe('Applicants — error state', () => {
     setupAuth();
     searchApplicants.mockRejectedValue(new Error('Network error'));
 
-    render(<Applicants />);
+    renderApplicants();
 
     await waitFor(() => {
       expect(screen.getByText(/network error/i)).toBeInTheDocument();
     });
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+});
+
+// ── Domain: URL search param seeding ──────────────────────────────────────
+
+describe('Applicants — URL q param seeds search', () => {
+  it('calls searchApplicants with the q param value on mount', async () => {
+    setupAuth();
+    setupApi();
+
+    renderApplicants('/solicitantes?q=foo');
+
+    await waitFor(() => {
+      expect(searchApplicants).toHaveBeenCalledWith('foo', 0);
+    });
+  });
+
+  it('shows the q param value pre-filled in the search input', async () => {
+    setupAuth();
+    setupApi();
+
+    renderApplicants('/solicitantes?q=foo');
+
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText(/buscar/i)).toHaveValue('foo');
+    });
+  });
+
+  it('calls searchApplicants with empty string when no q param', async () => {
+    setupAuth();
+    setupApi();
+
+    renderApplicants('/solicitantes');
+
+    await waitFor(() => {
+      expect(searchApplicants).toHaveBeenCalledWith('', 0);
+    });
+  });
+
+  it('decodes encoded q param value correctly', async () => {
+    setupAuth();
+    setupApi();
+
+    renderApplicants('/solicitantes?q=Garc%C3%ADa%20L%C3%B3pez');
+
+    await waitFor(() => {
+      expect(searchApplicants).toHaveBeenCalledWith('García López', 0);
+    });
   });
 });

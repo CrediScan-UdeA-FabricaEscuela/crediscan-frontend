@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchApplicants } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import Avatar from '../components/ui/Avatar';
@@ -9,8 +9,11 @@ import { UsersIcon } from '../components/icons';
 const PAGE_SIZE = 10;
 
 export default function Applicants() {
+  const [searchParams] = useSearchParams();
+  const qFromUrl = searchParams.get('q') || '';
+
   const [rows, setRows] = useState([]);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(qFromUrl);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
@@ -36,7 +39,20 @@ export default function Applicants() {
     }
   }
 
-  useEffect(() => { load(query, page); }, [page]);
+  // Sync query state and reload whenever the URL q param changes (including initial mount).
+  // This covers both first render (?q=foo) and subsequent TopBar navigations.
+  useEffect(() => {
+    setQuery(qFromUrl);
+    setPage(0);
+    load(qFromUrl, 0);
+  }, [qFromUrl]);
+
+  // Reload when the user advances/retreats pages via pagination controls.
+  // Guard: skip page 0 to avoid double-firing with the qFromUrl effect above.
+  useEffect(() => {
+    if (page === 0) return;
+    load(query, page);
+  }, [page]);
 
   function onSearch(e) {
     e.preventDefault();

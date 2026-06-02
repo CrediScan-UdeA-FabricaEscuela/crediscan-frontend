@@ -52,6 +52,13 @@ describe('TopBar — breadcrumb', () => {
     renderTopBar('/reportes');
     expect(screen.getByText(/reportes/i)).toBeInTheDocument();
   });
+
+  it('"Inicio" renders as a link to /dashboard', () => {
+    renderTopBar('/');
+    const link = screen.getByRole('link', { name: /inicio/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/dashboard');
+  });
 });
 
 // -----------------------------------------------------------------------
@@ -79,5 +86,67 @@ describe('TopBar — navigation', () => {
     await user.click(btn);
 
     expect(mockNavigate).toHaveBeenCalledWith('/evaluaciones/nueva');
+  });
+});
+
+// -----------------------------------------------------------------------
+// Search behavior
+// -----------------------------------------------------------------------
+describe('TopBar — search', () => {
+  it('search input is not readOnly — accepts typed text', async () => {
+    const user = userEvent.setup();
+    renderTopBar('/');
+
+    const input = screen.getByPlaceholderText(/buscar solicitante/i);
+    await user.type(input, 'Maria');
+
+    expect(input).toHaveValue('Maria');
+  });
+
+  it('submitting the form with a term navigates to /solicitantes?q=<term>', async () => {
+    const user = userEvent.setup();
+    renderTopBar('/');
+
+    const input = screen.getByPlaceholderText(/buscar solicitante/i);
+    await user.type(input, 'Juan');
+    await user.keyboard('{Enter}');
+
+    expect(mockNavigate).toHaveBeenCalledWith('/solicitantes?q=Juan');
+  });
+
+  it('submitting the form with an empty term navigates to /solicitantes (no q param)', async () => {
+    const user = userEvent.setup();
+    renderTopBar('/');
+
+    const input = screen.getByPlaceholderText(/buscar solicitante/i);
+    // input is empty, press Enter
+    await user.click(input);
+    await user.keyboard('{Enter}');
+
+    expect(mockNavigate).toHaveBeenCalledWith('/solicitantes');
+  });
+
+  it('encodes special characters in the search term', async () => {
+    const user = userEvent.setup();
+    renderTopBar('/');
+
+    const input = screen.getByPlaceholderText(/buscar solicitante/i);
+    await user.type(input, 'García López');
+    await user.keyboard('{Enter}');
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      `/solicitantes?q=${encodeURIComponent('García López')}`
+    );
+  });
+
+  it('submitting with only whitespace navigates to /solicitantes (trimmed empty)', async () => {
+    const user = userEvent.setup();
+    renderTopBar('/');
+
+    const input = screen.getByPlaceholderText(/buscar solicitante/i);
+    await user.type(input, '   ');
+    await user.keyboard('{Enter}');
+
+    expect(mockNavigate).toHaveBeenCalledWith('/solicitantes');
   });
 });

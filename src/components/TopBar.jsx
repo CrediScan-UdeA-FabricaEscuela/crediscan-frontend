@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { SearchIcon, PlusIcon } from './icons';
 
@@ -33,6 +34,7 @@ export default function TopBar() {
   const { auth } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const label = resolveBreadcrumb(location.pathname);
   const initial = (auth?.username || 'U').charAt(0).toUpperCase();
@@ -41,17 +43,27 @@ export default function TopBar() {
     navigate('/evaluaciones/nueva');
   }
 
+  function handleSearchSubmit(e) {
+    e.preventDefault();
+    const trimmed = searchTerm.trim();
+    if (trimmed) {
+      navigate('/solicitantes?q=' + encodeURIComponent(trimmed));
+    } else {
+      navigate('/solicitantes');
+    }
+  }
+
   return (
     <header className="topbar">
       {/* Breadcrumb */}
       <div className="topbar-breadcrumb">
-        <span className="breadcrumb-root">Inicio</span>
+        <Link to="/dashboard" className="breadcrumb-root">Inicio</Link>
         <span className="breadcrumb-sep"> / </span>
         <span className="breadcrumb-current">{label}</span>
       </div>
 
       {/* Center: search */}
-      <div className="topbar-search">
+      <form className="topbar-search" onSubmit={handleSearchSubmit}>
         <span className="topbar-search-icon">
           <SearchIcon size={16} />
         </span>
@@ -59,9 +71,10 @@ export default function TopBar() {
           type="text"
           placeholder="Buscar solicitante..."
           className="topbar-search-input"
-          readOnly
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
         />
-      </div>
+      </form>
 
       {/* Right: actions + avatar */}
       <div className="topbar-actions">
