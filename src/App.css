@@ -590,15 +590,15 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 }
 /* Risk levels */
 .badge-VERY_LOW { background: var(--green-light); color: var(--green-dark); }
-.badge-LOW { background: var(--teal-light); color: #0f766e; }
+.badge-LOW { background: var(--teal-light); color: var(--accent-tertiary); }
 .badge-MEDIUM { background: var(--amber-light); color: var(--amber-dark); }
-.badge-HIGH { background: var(--orange-light); color: #c2410c; }
-.badge-VERY_HIGH { background: #fff1f2; color: #be123c; }
+.badge-HIGH { background: var(--orange-light); color: var(--warning); }
+.badge-VERY_HIGH { background: var(--red-light); color: var(--danger); }
 .badge-REJECTED { background: var(--red-light); color: var(--red-dark); }
 /* Decision */
 .badge-APPROVED { background: var(--green-light); color: var(--green-dark); }
 .badge-MANUAL_REVIEW { background: var(--amber-light); color: var(--amber-dark); }
-.badge-ESCALATED { background: var(--purple-light); color: #6d28d9; }
+.badge-ESCALATED { background: var(--purple-light); color: var(--accent-primary); }
 /* Model status */
 .badge-ACTIVE { background: var(--green-light); color: var(--green-dark); }
 .badge-DRAFT { background: var(--navy-100); color: var(--navy-600); }
@@ -844,6 +844,15 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 
 /* ── Empty state icon (SVG-based) ── */
 .empty-state-icon { color: var(--fg-secondary); opacity: .5; margin-bottom: .75rem; }
+
+/* ── Evaluations page: filter chips + export bar (additive) ── */
+.filter-section { margin-top: .75rem; display: flex; flex-wrap: wrap; gap: 1.5rem; }
+.filter-group-label { font-size: .8rem; font-weight: 600; margin-bottom: .4rem; color: var(--fg-secondary); }
+.filter-chips { display: flex; gap: .5rem; flex-wrap: wrap; }
+.filter-chip { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; padding: .25rem .5rem; border-radius: 999px; border: 1px solid var(--border); font-weight: 400; }
+.filter-chip input { margin: 0; }
+.filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; }
+.export-bar { margin-top: 1rem; display: flex; gap: .5rem; flex-wrap: wrap; }
 
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
