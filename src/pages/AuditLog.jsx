@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAuditLogs, getAuditExportUrl } from '../api/client';
+import Button from '../components/ui/Button';
+import { AuditIcon, DownloadIcon } from '../components/icons';
 
 export default function AuditLog() {
   const [rows, setRows] = useState([]);
@@ -56,7 +58,7 @@ export default function AuditLog() {
           <p>{totalElements} eventos registrados</p>
         </div>
         <a href={getAuditExportUrl()} download="auditoria.csv">
-          <button className="btn-secondary">⬇ Exportar CSV</button>
+          <Button variant="secondary" size="sm" icon={<DownloadIcon size={14} />}>Exportar CSV</Button>
         </a>
       </div>
 
@@ -66,7 +68,7 @@ export default function AuditLog() {
         <div className="loading-wrapper"><div className="spinner"></div> Cargando registros...</div>
       ) : rows.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">🔍</div>
+          <div className="empty-state-icon"><AuditIcon size={40} /></div>
           <p>No hay registros de auditoría.</p>
         </div>
       ) : (
@@ -86,16 +88,16 @@ export default function AuditLog() {
             <tbody>
               {rows.map(r => (
                 <tr key={r.id}>
-                  <td style={{ fontSize: '.78rem', fontFamily: 'monospace', color: 'var(--navy-600)', whiteSpace: 'nowrap' }}>
+                  <td className="cell-mono audit-ts">
                     {formatDate(r.timestamp)}
                   </td>
-                  <td style={{ fontWeight: 500 }}>{r.usuarioId || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '.8rem' }}>{r.accion || '—'}</td>
-                  <td style={{ fontSize: '.8rem' }}>{r.recurso || '—'}</td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '.75rem', color: 'var(--navy-600)' }}>
+                  <td className="audit-actor">{r.usuarioId || '—'}</td>
+                  <td className="cell-mono">{r.accion || '—'}</td>
+                  <td className="audit-resource">{r.recurso || '—'}</td>
+                  <td className="cell-mono audit-id">
                     {r.recursoId ? r.recursoId.substring(0, 8) + '...' : '—'}
                   </td>
-                  <td style={{ fontFamily: 'monospace', fontSize: '.78rem' }}>{r.ip || '—'}</td>
+                  <td className="cell-mono">{r.ip || '—'}</td>
                   <td>
                     <span className={r.resultado === 'SUCCESS' ? 'audit-result-OK' : 'audit-result-FAILURE'}>
                       {r.resultado || '—'}
@@ -108,21 +110,23 @@ export default function AuditLog() {
 
           {totalPages > 1 && (
             <div className="pagination">
-              <button
-                className="btn-sm btn-secondary"
+              <Button
+                size="sm"
+                variant="secondary"
                 disabled={page === 0}
                 onClick={() => setPage(p => p - 1)}
               >
                 ← Anterior
-              </button>
-              <span>Página {page + 1} de {totalPages}</span>
-              <button
-                className="btn-sm btn-secondary"
+              </Button>
+              <span className="pagination-info">Página {page + 1} de {totalPages}</span>
+              <Button
+                size="sm"
+                variant="secondary"
                 disabled={page >= totalPages - 1}
                 onClick={() => setPage(p => p + 1)}
               >
                 Siguiente →
-              </button>
+              </Button>
             </div>
           )}
         </div>

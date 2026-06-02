@@ -779,8 +779,8 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 
 /* ── Audit ── */
-.audit-result-OK { color: var(--green-dark); font-weight: 600; }
-.audit-result-FAILURE { color: var(--red-dark); font-weight: 600; }
+.audit-result-OK { color: var(--success); font-weight: 600; }
+.audit-result-FAILURE { color: var(--danger); font-weight: 600; }
 
 /* ── Responsive ── */
 /* ── Dashboard layout helpers ── */
@@ -936,3 +936,8 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   font-family: var(--font-caption);
   border: 1px solid var(--border-subtle);
 }
+/* ── AuditLog page — additive namespaced classes ── */
+.audit-actor { font-weight: 500; }
+.audit-resource { font-size: .8rem; }
+.audit-id { font-size: .75rem; }
+.audit-ts { white-space: nowrap; }
