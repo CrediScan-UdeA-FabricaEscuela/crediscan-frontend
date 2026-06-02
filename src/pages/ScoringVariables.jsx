@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getScoringVariables, createScoringVariable, updateScoringVariable } from '../api/client';
+import Button from '../components/ui/Button';
+import { PlusIcon, SettingsIcon } from '../components/icons';
 
 const BLANK_RANGE = { limiteInferior: '', limiteSuperior: '', puntaje: '', etiqueta: '' };
 
@@ -161,9 +163,10 @@ export default function ScoringVariables() {
           <h2>Variables de Scoring</h2>
           <p>{variables.length} variables configuradas</p>
         </div>
-        <button onClick={showForm ? closeForm : openCreate}>
-          {showForm ? '✕ Cancelar' : '+ Nueva Variable'}
-        </button>
+        {showForm
+          ? <Button variant="secondary" onClick={closeForm}>✕ Cancelar</Button>
+          : <Button icon={<PlusIcon />} onClick={openCreate}>+ Nueva Variable</Button>
+        }
       </div>
 
       {saveSuccess && <div className="alert success">{saveSuccess}</div>}
@@ -214,10 +217,10 @@ export default function ScoringVariables() {
               </div>
 
               {form.tipo === 'NUMERIC' && (
-                <div style={{ marginTop: '.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.5rem' }}>
+                <div className="variables-ranges">
+                  <div className="variables-ranges-header">
                     <label style={{ margin: 0 }}>Rangos de Puntuación</label>
-                    <button type="button" className="btn-sm btn-ghost" onClick={addRange}>+ Agregar rango</button>
+                    <Button size="sm" variant="ghost" type="button" onClick={addRange}>+ Agregar rango</Button>
                   </div>
                   {form.rangos.map((r, i) => (
                     <div key={i} className="range-row" style={{ marginBottom: '.4rem' }}>
@@ -260,7 +263,7 @@ export default function ScoringVariables() {
                       </div>
                       <div style={{ paddingTop: i === 0 ? '1.4rem' : 0 }}>
                         {form.rangos.length > 1 && (
-                          <button type="button" className="btn-sm btn-danger" onClick={() => removeRange(i)}>✕</button>
+                          <Button size="sm" variant="danger" type="button" onClick={() => removeRange(i)}>&times;</Button>
                         )}
                       </div>
                     </div>
@@ -269,10 +272,10 @@ export default function ScoringVariables() {
               )}
 
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={closeForm}>Cancelar</button>
-                <button type="submit" disabled={saving}>
+                <Button variant="secondary" onClick={closeForm}>Cancelar</Button>
+                <Button type="submit" disabled={saving}>
                   {saving ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Crear Variable'}
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -283,7 +286,7 @@ export default function ScoringVariables() {
         <div className="loading-wrapper"><div className="spinner"></div> Cargando variables...</div>
       ) : variables.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">⚙</div>
+          <div className="empty-state-icon"><SettingsIcon size={40} /></div>
           <p>No hay variables de scoring configuradas.</p>
         </div>
       ) : (
@@ -302,17 +305,15 @@ export default function ScoringVariables() {
             <tbody>
               {variables.map(v => (
                 <tr key={v.id}>
-                  <td style={{ fontWeight: 600, fontSize: '.82rem' }}>
+                  <td className="variables-campo">
                     {CAMPOS_DISPONIBLES.find(c => c.value === v.nombre)?.label ?? v.nombre}
                   </td>
-                  <td><span className="badge badge-DRAFT">{v.tipo}</span></td>
+                  <td><span className={`badge badge-tipo-${v.tipo}`}>{v.tipo}</span></td>
                   <td>{v.peso != null ? (v.peso * 100).toFixed(0) + '%' : '—'}</td>
-                  <td style={{ color: 'var(--navy-600)', fontSize: '.8rem' }}>{v.descripcion || '—'}</td>
+                  <td className="variables-desc">{v.descripcion || '—'}</td>
                   <td>{v.rangos?.length ?? 0} rangos</td>
                   <td>
-                    <button className="btn-sm btn-secondary" onClick={() => openEdit(v)}>
-                      Editar
-                    </button>
+                    <Button size="sm" variant="secondary" onClick={() => openEdit(v)}>Editar</Button>
                   </td>
                 </tr>
               ))}
