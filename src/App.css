@@ -907,3 +907,11 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   color: var(--fg-secondary);
   margin-top: .3rem;
 }
+
+/* scoring-variables-page */
+.badge-tipo-NUMERIC      { background: var(--blue-light);   color: var(--accent-primary); }
+.badge-tipo-CATEGORICAL  { background: var(--purple-light); color: var(--accent-primary); }
+.variables-ranges        { margin-top: .75rem; }
+.variables-ranges-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.variables-campo         { font-weight: 600; font-size: .82rem; color: var(--fg-primary); }
+.variables-desc          { color: var(--fg-secondary); font-size: .8rem; }
