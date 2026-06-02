@@ -2,6 +2,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchApplicants, getEvaluations } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/ui/Button';
+import StatCard from '../components/ui/StatCard';
+import {
+  UsersIcon,
+  ListIcon,
+  AuditIcon,
+  AdminIcon,
+  PlusIcon,
+  FileIcon,
+} from '../components/icons';
 
 export default function Dashboard() {
   const { auth } = useAuth();
@@ -45,62 +55,91 @@ export default function Dashboard() {
           <h2>{greeting}, {auth?.username}</h2>
           <p>Panel principal — {new Date().toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
+        <div className="page-header-actions">
+          <Button
+            variant="outline"
+            disabled
+            title="Próximamente"
+            icon={<FileIcon size={15} />}
+          >
+            Exportar reporte
+          </Button>
+          {canEvaluate && (
+            <Button
+              variant="primary"
+              onClick={() => navigate('/evaluaciones/nueva')}
+              icon={<PlusIcon size={15} />}
+            >
+              Nueva Evaluación
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon blue">👤</div>
-          <div>
-            <div className="stat-value">{loading ? '—' : totalApplicants}</div>
-            <div className="stat-label">Solicitantes registrados</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon green">✓</div>
-          <div>
-            <div className="stat-value">{loading ? '—' : evalMonth}</div>
-            <div className="stat-label">Evaluaciones del mes</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon amber">⚠</div>
-          <div>
-            <div className="stat-value">{loading ? '—' : pendientes}</div>
-            <div className="stat-label">Pendientes de decisión</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon purple">◈</div>
-          <div>
-            <div className="stat-value">{role}</div>
-            <div className="stat-label">Tu rol</div>
-          </div>
-        </div>
+        <StatCard
+          value={totalApplicants}
+          label="Solicitantes registrados"
+          icon={<UsersIcon size={20} />}
+          accent="blue"
+          loading={loading}
+        />
+        <StatCard
+          value={evalMonth}
+          label="Evaluaciones del mes"
+          icon={<ListIcon size={20} />}
+          accent="green"
+          loading={loading}
+        />
+        <StatCard
+          value={pendientes}
+          label="Pendientes de decisión"
+          icon={<AuditIcon size={20} />}
+          accent="amber"
+          loading={loading}
+        />
+        <StatCard
+          value={role}
+          label="Tu rol"
+          icon={<AdminIcon size={20} />}
+          accent="purple"
+          loading={loading}
+        />
       </div>
 
-      <div className="card" style={{ marginBottom: '1.5rem' }}>
+      <div className="card card-mb">
         <div className="card-header">
           <h3>Acciones rápidas</h3>
         </div>
         <div className="card-body">
           <div className="quick-actions">
-            <button onClick={() => navigate('/solicitantes/nuevo')}>
-              + Nuevo Solicitante
-            </button>
+            <Button
+              variant="primary"
+              onClick={() => navigate('/solicitantes/nuevo')}
+              icon={<PlusIcon size={15} />}
+            >
+              Nuevo Solicitante
+            </Button>
             {canEvaluate && (
-              <button className="btn-success" onClick={() => navigate('/evaluaciones/nueva')}>
+              <Button
+                variant="success"
+                onClick={() => navigate('/evaluaciones/nueva')}
+              >
                 ▶ Nueva Evaluación
-              </button>
+              </Button>
             )}
-            <button className="btn-secondary" onClick={() => navigate('/solicitantes')}>
+            <Button
+              variant="secondary"
+              onClick={() => navigate('/solicitantes')}
+            >
               Ver Solicitantes
-            </button>
-            <button className="btn-secondary" onClick={() => navigate('/evaluaciones')}>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => navigate('/evaluaciones')}
+            >
               Ver Evaluaciones
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -110,12 +149,12 @@ export default function Dashboard() {
           <h3>Bienvenido a CrediScan</h3>
         </div>
         <div className="card-body">
-          <p style={{ fontSize: '.875rem', color: 'var(--navy-600)', lineHeight: '1.7' }}>
+          <p className="welcome-description">
             CrediScan es el motor de scoring crediticio de la Fábrica de Escuela UdeA.
             Permite registrar solicitantes, cargar datos financieros, ejecutar evaluaciones
             con modelos configurables, registrar decisiones y auditar todas las acciones del sistema.
           </p>
-          <ul style={{ fontSize: '.875rem', color: 'var(--navy-600)', marginTop: '.75rem', paddingLeft: '1.25rem', lineHeight: '2' }}>
+          <ul className="welcome-list">
             {canEvaluate && <li>Como <strong>{role}</strong>, podés registrar solicitantes y ejecutar evaluaciones.</li>}
             {role === 'RISK_MANAGER' && <li>Como <strong>Risk Manager</strong>, podés gestionar variables, modelos y decisiones.</li>}
             {role === 'ADMIN' && <li>Como <strong>Administrador</strong>, tenés acceso completo a todas las funciones.</li>}
