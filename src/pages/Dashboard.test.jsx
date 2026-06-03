@@ -29,8 +29,8 @@ function makeEvals(count, pendingCount = 0) {
   const now = new Date();
   return Array.from({ length: count }, (_, i) => ({
     evaluatedAt: now.toISOString(),
-    knockedOut: false,
-    hasCreditDecision: i >= pendingCount ? true : false,
+    // first `pendingCount` have no decision yet (pending); the rest are decided.
+    decisionStatus: i >= pendingCount ? 'APPROVED' : null,
   }));
 }
 

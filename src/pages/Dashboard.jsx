@@ -41,7 +41,9 @@ export default function Dashboard() {
         return d.getFullYear() === thisYear && d.getMonth() === thisMonth;
       });
       setEvalMonth(delMes.length);
-      setPendientes(list.filter(e => !e.knockedOut && !e.hasCreditDecision).length);
+      // Pendiente de decisión = evaluación sin decisionStatus registrado.
+      // (Los campos knockedOut/hasCreditDecision no existen en la API; el real es decisionStatus.)
+      setPendientes(list.filter(e => !e.decisionStatus).length);
     }).finally(() => setLoading(false));
   }, []);
 
