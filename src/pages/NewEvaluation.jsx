@@ -78,7 +78,13 @@ export default function NewEvaluation() {
       });
       navigate(`/evaluaciones/${evaluation.id}`);
     } catch (err) {
-      setError(err.message);
+      // Backend errors (cooldown, missing financial data, …) reference the
+      // applicant by UUID. Swap it for the name we already have so the
+      // message reads naturally.
+      const message = selectedApplicant?.id
+        ? err.message.replaceAll(selectedApplicant.id, selectedApplicant.nombre)
+        : err.message;
+      setError(message);
     } finally {
       setSubmitting(false);
     }

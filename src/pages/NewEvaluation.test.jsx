@@ -367,6 +367,32 @@ describe('NewEvaluation — API error states', () => {
     const errorEl = document.querySelector('.alert.error');
     expect(errorEl).not.toBeNull();
   });
+
+  it('replaces the applicant UUID with its name in submit error messages', async () => {
+    const user = userEvent.setup();
+    const applicant = makeApplicant({ id: '3dde8950-722f-4a8a-bc16-d90d6aedf84a', nombre: 'Marta Díaz' });
+    setupActiveModel(makeModel({ id: 'mdl-1' }));
+    searchApplicants.mockResolvedValue({ content: [applicant] });
+    executeEvaluation.mockRejectedValue(
+      new Error(`El solicitante ${applicant.id} no tiene datos financieros`),
+    );
+
+    render(<NewEvaluation />);
+
+    await waitFor(() => screen.getByPlaceholderText(/buscar/i));
+    await user.type(screen.getByPlaceholderText(/buscar/i), 'Marta');
+    await user.click(screen.getByRole('button', { name: /buscar/i }));
+    await waitFor(() => screen.getByRole('button', { name: /seleccionar/i }));
+    await user.click(screen.getByRole('button', { name: /seleccionar/i }));
+    await waitFor(() => screen.getByText(applicant.nombre));
+
+    await user.click(screen.getByRole('button', { name: /ejecutar/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('El solicitante Marta Díaz no tiene datos financieros')).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/3dde8950/)).not.toBeInTheDocument();
+  });
 });
 
 // ── T13: Loading model spinner ────────────────────────────────────────────
