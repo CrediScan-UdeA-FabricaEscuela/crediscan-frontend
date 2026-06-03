@@ -72,13 +72,15 @@ function fmt(n, digits = 2) {
 
 // ── Circular Score Gauge ───────────────────────────────────────────────────
 // Design decision: no reliable max score from the API, so the ring is
-// STATUS-COLORED (full accent ring for Apto, danger ring for KO) with the
+// STATUS-COLORED (accent ring when no KO, danger ring for KO) with the
 // score number prominent. This avoids a misleading proportional fill.
+// Note: the verdict only reflects KO rules — /scoring/simular returns no
+// score threshold, so we never label a low score as "approved".
 function ScoreGauge({ score, isKo }) {
   const ringColor = isKo
     ? 'var(--danger)'
     : 'var(--accent-primary)';
-  const statusLabel = isKo ? 'Rechazado por KO' : 'Apto';
+  const statusLabel = isKo ? 'Rechazado por KO' : 'Sin rechazo por KO';
   const statusColor = isKo ? 'var(--danger)' : 'var(--success)';
 
   return (
