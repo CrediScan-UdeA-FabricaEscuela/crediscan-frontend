@@ -899,11 +899,18 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 }
 .histogram-bar {
   width: 100%;
-  background: linear-gradient(180deg, var(--accent-primary), var(--accent-tertiary));
+  /* color set inline per bar (red=low score → green=high score) */
+  background: var(--accent-primary);
   min-height: 0;
   border-radius: 2px 2px 0 0;
 }
 .histogram-bar.has-count { min-height: 2px; }
+.histogram-count {
+  font-size: .62rem;
+  font-weight: 600;
+  color: var(--fg-secondary);
+  line-height: 1;
+}
 .histogram-axis {
   display: flex;
   justify-content: space-between;
@@ -911,6 +918,17 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   color: var(--fg-secondary);
   margin-top: .3rem;
 }
+.histogram-xaxis { display: flex; gap: .3rem; margin-top: .35rem; }
+.histogram-xlabel {
+  flex: 1;
+  text-align: center;
+  font-size: .6rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.histogram-legend { margin-top: .6rem; font-size: .72rem; color: var(--fg-muted); }
 
 /* scoring-variables-page */
 .badge-tipo-NUMERIC      { background: var(--blue-light);   color: var(--accent-primary); }

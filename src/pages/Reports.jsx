@@ -189,26 +189,32 @@ function RiskDistributionReport() {
             <div className="card-header"><h3>Histograma de scores</h3></div>
             <div className="card-body">
               <div className="histogram">
-                {data.histograma.map((b, idx) => (
-                  <div
-                    key={idx}
-                    className="histogram-col"
-                    title={`${b.binInicio}-${b.binFin}: ${b.cantidad}`}
-                  >
+                {data.histograma.map((b, idx) => {
+                  const n = data.histograma.length;
+                  // 0 = rojo (score bajo) → 120 = verde (score alto)
+                  const hue = n > 1 ? Math.round((idx / (n - 1)) * 120) : 60;
+                  return (
                     <div
-                      className={`histogram-bar${b.cantidad > 0 ? ' has-count' : ''}`}
-                      style={{ height: `${(b.cantidad / maxBin) * 100}%` }}
-                    />
-                  </div>
+                      key={idx}
+                      className="histogram-col"
+                      title={`Score ${fmt(b.binInicio, 0)}–${fmt(b.binFin, 0)}: ${b.cantidad} evaluación(es)`}
+                    >
+                      {b.cantidad > 0 && <span className="histogram-count">{b.cantidad}</span>}
+                      <div
+                        className={`histogram-bar${b.cantidad > 0 ? ' has-count' : ''}`}
+                        style={{ height: `${(b.cantidad / maxBin) * 90}%`, background: `hsl(${hue}, 65%, 48%)` }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="histogram-xaxis">
+                {data.histograma.map((b, idx) => (
+                  <span key={idx} className="histogram-xlabel">{fmt(b.binInicio, 0)}</span>
                 ))}
               </div>
-              <div className="histogram-axis">
-                {data.histograma.length > 0 && (
-                  <>
-                    <span>{data.histograma[0].binInicio}</span>
-                    <span>{data.histograma[data.histograma.length - 1].binFin}</span>
-                  </>
-                )}
+              <div className="histogram-legend">
+                Eje X: rango de score (rojo = bajo · verde = alto) — Eje Y: cantidad de evaluaciones
               </div>
             </div>
           </div>
