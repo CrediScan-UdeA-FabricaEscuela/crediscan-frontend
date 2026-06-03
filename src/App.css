@@ -890,8 +890,10 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 }
 .histogram-col {
   flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
   gap: .2rem;
 }
