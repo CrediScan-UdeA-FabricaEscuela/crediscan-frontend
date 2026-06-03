@@ -30,8 +30,9 @@ export default function Applicants() {
     try {
       const data = await searchApplicants(q, p);
       setRows(data.content || []);
-      setTotalPages(data.totalPages || 0);
-      setTotalElements(data.totalElements || 0);
+      // The API nests pagination metadata under `page` (Spring Page serialization).
+      setTotalPages(data.page?.totalPages || 0);
+      setTotalElements(data.page?.totalElements || 0);
     } catch (err) {
       setError(err.message);
     } finally {

@@ -43,7 +43,7 @@ function setupAuth(role = 'ADMIN') {
 }
 
 function setupApi({ content = makeApplicants(), totalPages = 1, totalElements = 2 } = {}) {
-  searchApplicants.mockResolvedValue({ content, totalPages, totalElements });
+  searchApplicants.mockResolvedValue({ content, page: { totalPages, totalElements, size: 10, number: 0 } });
 }
 
 /**
@@ -244,7 +244,7 @@ describe('Applicants — navigation targets', () => {
     const user = userEvent.setup();
     setupAuth();
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
-    searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
+    searchApplicants.mockResolvedValue({ content, page: { totalPages: 1, totalElements: 1, size: 10, number: 0 } });
 
     renderApplicants();
     await waitFor(() => screen.getByRole('table'));
@@ -257,7 +257,7 @@ describe('Applicants — navigation targets', () => {
     const user = userEvent.setup();
     setupAuth();
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
-    searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
+    searchApplicants.mockResolvedValue({ content, page: { totalPages: 1, totalElements: 1, size: 10, number: 0 } });
 
     renderApplicants();
     await waitFor(() => screen.getByRole('table'));
@@ -270,7 +270,7 @@ describe('Applicants — navigation targets', () => {
     const user = userEvent.setup();
     setupAuth('ADMIN');
     const content = [{ ...makeApplicants(1)[0], id: '42' }];
-    searchApplicants.mockResolvedValue({ content, totalPages: 1, totalElements: 1 });
+    searchApplicants.mockResolvedValue({ content, page: { totalPages: 1, totalElements: 1, size: 10, number: 0 } });
 
     renderApplicants();
     await waitFor(() => screen.getByRole('table'));
@@ -285,7 +285,7 @@ describe('Applicants — navigation targets', () => {
 describe('Applicants — empty state', () => {
   it('renders empty-state element and no table rows when content is []', async () => {
     setupAuth();
-    searchApplicants.mockResolvedValue({ content: [], totalPages: 0, totalElements: 0 });
+    searchApplicants.mockResolvedValue({ content: [], page: { totalPages: 0, totalElements: 0, size: 10, number: 0 } });
 
     renderApplicants();
 
