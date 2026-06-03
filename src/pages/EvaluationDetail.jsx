@@ -65,6 +65,7 @@ export default function EvaluationDetail() {
   const [decisionForm, setDecisionForm] = useState({ decision: 'APPROVED', observations: '' });
   const [submittingDecision, setSubmittingDecision] = useState(false);
   const [decisionError, setDecisionError] = useState('');
+  const [pdfError, setPdfError] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -107,6 +108,24 @@ export default function EvaluationDetail() {
     }
   }
 
+  async function downloadPdf() {
+    setPdfError('');
+    try {
+      const res = await fetch(getEvaluationPdf(id), {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      if (!res.ok) throw new Error(`Error ${res.status}`);
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `evaluacion-${id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } catch (err) {
+      setPdfError(`No se pudo descargar el PDF: ${err.message}`);
+    }
+  }
+
   if (loading) return <div className="loading-wrapper"><div className="spinner"></div> Cargando evaluación...</div>;
   if (error) return (
     <div>
@@ -130,15 +149,9 @@ export default function EvaluationDetail() {
           <h2>Resultado de Evaluación</h2>
           <p className="cell-mono">{id}</p>
         </div>
-        <a
-          href={getEvaluationPdf(id)}
-          target="_blank"
-          rel="noreferrer"
-          style={{ textDecoration: 'none' }}
-        >
-          <Button size="sm" variant="secondary">Descargar PDF</Button>
-        </a>
+        <Button size="sm" variant="secondary" onClick={downloadPdf}>Descargar PDF</Button>
       </div>
+      {pdfError && <div className="alert error">{pdfError}</div>}
 
       {/* KO Banner */}
       {evaluation.knockedOut && (
