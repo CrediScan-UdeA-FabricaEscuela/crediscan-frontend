@@ -194,7 +194,7 @@ describe('Simulation — Calcular simulación', () => {
     );
   });
 
-  it('renders Apto status for non-KO result', async () => {
+  it('renders "Sin rechazo por KO" status for non-KO result', async () => {
     getScoringModels.mockResolvedValue([makeModel({ id: 'm1', estado: 'ACTIVE' })]);
     simulateScore.mockResolvedValue(makeResult({ puntajeFinal: 750, rechazadoPorKo: false }));
     const user = userEvent.setup();
@@ -209,7 +209,7 @@ describe('Simulation — Calcular simulación', () => {
     await user.type(valInputs[0], '40000');
     await user.click(screen.getByRole('button', { name: /calcular simulación/i }));
 
-    await waitFor(() => expect(screen.getByText(/Apto/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/sin rechazo por ko/i)).toBeInTheDocument());
   });
 
   it('renders Rechazado status for KO result', async () => {
